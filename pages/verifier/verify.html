@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verify an Item — Qentis</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="../../assets/css/main.css" rel="stylesheet"/>
+  <style>
+    .method-card {
+      cursor: pointer;
+      border: 1.5px solid var(--q-border);
+      border-radius: var(--q-radius);
+      padding: 16px;
+      text-align: center;
+      transition: all .15s;
+    }
+    .method-card:hover { border-color: var(--q-primary-light); background: #EEF4FF; }
+    .method-card.active { border-color: var(--q-primary); background: #EEF4FF; }
+    .method-icon { font-size: 28px; margin-bottom: 8px; }
+    .method-label { font-size: 13px; font-weight: 500; color: var(--q-primary); }
+    .verify-panel { display: none; }
+    .verify-panel.active { display: block; }
+    #camera-feed { width: 100%; max-width: 400px; border-radius: var(--q-radius); }
+  </style>
+</head>
+<body>
+
+<!-- Simple top navbar (no sidebar — verifiers need no account) -->
+<nav class="q-navbar">
+  <a href="../../index.html" class="q-logo">Qen<span>tis</span></a>
+  <div style="margin-left:auto;display:flex;gap:12px">
+    <a href="../login.html" style="font-size:13px;color:var(--q-text-muted)">Sign in</a>
+  </div>
+</nav>
+
+<div style="margin-top:60px;padding:32px 24px;max-width:760px;margin-left:auto;margin-right:auto">
+
+  <div style="text-align:center;margin-bottom:32px">
+    <h1 style="font-size:26px;color:var(--q-primary)">Verify an item</h1>
+    <p style="color:var(--q-text-muted);font-size:15px">No account required. Choose a verification method below.</p>
+  </div>
+
+  <!-- Result display (hidden until verify called) -->
+  <div id="result-area" style="margin-bottom:28px"></div>
+
+  <!-- Method selector -->
+  <div class="row g-2 mb-4">
+    <div class="col"><div class="method-card active" id="m-qr" onclick="selectMethod('qr')"><div class="method-icon">📷</div><div class="method-label">QR Code</div></div></div>
+    <div class="col"><div class="method-card" id="m-serial" onclick="selectMethod('serial')"><div class="method-icon">🔢</div><div class="method-label">Serial No.</div></div></div>
+    <div class="col"><div class="method-card" id="m-signature" onclick="selectMethod('signature')"><div class="method-icon">📎</div><div class="method-label">Signature</div></div></div>
+    <div class="col"><div class="method-card" id="m-ocr" onclick="selectMethod('ocr')"><div class="method-icon">🔍</div><div class="method-label">OCR Photo</div></div></div>
+    <div class="col"><div class="method-card" id="m-watermark" onclick="selectMethod('watermark')"><div class="method-icon">💧</div><div class="method-label">Watermark</div></div></div>
+  </div>
+
+  <div class="q-card">
+
+    <!-- QR Code panel -->
+    <div class="verify-panel active" id="panel-qr">
+      <h5 style="color:var(--q-primary);margin-bottom:4px">Scan QR code</h5>
+      <p style="color:var(--q-text-muted);font-size:14px;margin-bottom:20px">Point your camera at the QR code on the item.</p>
+      <div style="text-align:center">
+        <video id="camera-feed" autoplay playsinline></video>
+        <canvas id="qr-canvas" style="display:none"></canvas>
+        <div style="margin-top:16px">
+          <button class="btn-q-primary" onclick="startCamera()" id="start-cam-btn">Start camera</button>
+          <button class="btn-q-outline" onclick="stopCamera()" id="stop-cam-btn" style="display:none;margin-left:8px">Stop</button>
+        </div>
+        <p style="font-size:12px;color:var(--q-text-muted);margin-top:12px">Or upload a QR code image:</p>
+        <input type="file" id="qr-file" accept="image/*" onchange="verifyQRFromFile(this)"/>
+      </div>
+    </div>
+
+    <!-- Serial number panel -->
+    <div class="verify-panel" id="panel-serial">
+      <h5 style="color:var(--q-primary);margin-bottom:4px">Enter serial number</h5>
+      <p style="color:var(--q-text-muted);font-size:14px;margin-bottom:20px">Type the serial number printed on the item.</p>
+      <div class="q-form-group">
+        <label class="q-label">Serial number</label>
+        <input type="text" id="serial-input" class="q-input" placeholder="e.g. QNT-2026-ACAD-00123" style="font-family:var(--q-mono)"/>
+      </div>
+      <button id="serial-btn" class="btn-q-primary" onclick="verifyBySerial()">Verify</button>
+    </div>
+
+    <!-- Digital signature panel -->
+    <div class="verify-panel" id="panel-signature">
+      <h5 style="color:var(--q-primary);margin-bottom:4px">Verify digital signature</h5>
+      <p style="color:var(--q-text-muted);font-size:14px;margin-bottom:20px">Upload the original PDF certificate file.</p>
+      <div class="q-upload-zone" onclick="document.getElementById('sig-file').click()">
+        <div style="font-size:28px">📎</div>
+        <p>Click to upload PDF or drag and drop</p>
+        <p style="font-size:12px">PDF files only · Max 10MB</p>
+      </div>
+      <input type="file" id="sig-file" accept=".pdf" style="display:none" onchange="verifySignature(this)"/>
+      <div id="sig-filename" style="font-size:13px;color:var(--q-text-muted);margin-top:8px"></div>
+      <button id="sig-btn" class="btn-q-primary mt-3" style="display:none" onclick="submitSignatureVerify()">Verify signature</button>
+    </div>
+
+    <!-- OCR Photo panel -->
+    <div class="verify-panel" id="panel-ocr">
+      <h5 style="color:var(--q-primary);margin-bottom:4px">OCR photo scan</h5>
+      <p style="color:var(--q-text-muted);font-size:14px;margin-bottom:20px">Photograph a banknote. Qentis reads the serial number automatically.</p>
+      <div class="q-upload-zone" onclick="document.getElementById('ocr-file').click()">
+        <div style="font-size:28px">🔍</div>
+        <p>Upload a photo of the banknote</p>
+        <p style="font-size:12px">JPG, PNG · Max 10MB · Good lighting recommended</p>
+      </div>
+      <input type="file" id="ocr-file" accept="image/*" style="display:none" onchange="showOCRPreview(this)"/>
+      <img id="ocr-preview" style="display:none;max-width:300px;border-radius:var(--q-radius);margin-top:12px"/>
+      <button id="ocr-btn" class="btn-q-primary mt-3" style="display:none" onclick="submitOCRVerify()">Scan &amp; verify</button>
+    </div>
+
+    <!-- Watermark panel -->
+    <div class="verify-panel" id="panel-watermark">
+      <h5 style="color:var(--q-primary);margin-bottom:4px">Watermark detection</h5>
+      <p style="color:var(--q-text-muted);font-size:14px;margin-bottom:20px">Upload a photograph of the document. Qentis extracts the hidden watermark.</p>
+      <div class="q-upload-zone" onclick="document.getElementById('wm-file').click()">
+        <div style="font-size:28px">💧</div>
+        <p>Upload a photo of the document</p>
+        <p style="font-size:12px">JPG, PNG · Max 10MB</p>
+      </div>
+      <input type="file" id="wm-file" accept="image/*" style="display:none" onchange="showWMPreview(this)"/>
+      <img id="wm-preview" style="display:none;max-width:300px;border-radius:var(--q-radius);margin-top:12px"/>
+      <button id="wm-btn" class="btn-q-primary mt-3" style="display:none" onclick="submitWatermarkVerify()">Detect &amp; verify</button>
+    </div>
+
+  </div><!-- /q-card -->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script src="../../assets/js/api.js"></script>
+<script>
+
+let activeMethod = 'qr';
+let cameraStream = null;
+let scanLoop     = null;
+let sigFile      = null;
+let ocrFile      = null;
+let wmFile       = null;
+
+/* ── Method switcher ── */
+function selectMethod(method) {
+  activeMethod = method;
+  stopCamera();
+  document.querySelectorAll('.method-card').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.verify-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('m-' + method).classList.add('active');
+  document.getElementById('panel-' + method).classList.add('active');
+  document.getElementById('result-area').innerHTML = '';
+}
+
+/* ── QR camera ── */
+async function startCamera() {
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    const video  = document.getElementById('camera-feed');
+    video.srcObject = cameraStream;
+    document.getElementById('start-cam-btn').style.display = 'none';
+    document.getElementById('stop-cam-btn').style.display  = 'inline-block';
+    scanLoop = requestAnimationFrame(scanFrame);
+  } catch (e) {
+    showResult('unverifiable', 'Camera access denied. Please upload a QR image instead.');
+  }
+}
+
+function stopCamera() {
+  if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
+  if (scanLoop)     { cancelAnimationFrame(scanLoop); scanLoop = null; }
+  document.getElementById('start-cam-btn').style.display = 'inline-block';
+  document.getElementById('stop-cam-btn').style.display  = 'none';
+}
+
+function scanFrame() {
+  const video  = document.getElementById('camera-feed');
+  const canvas = document.getElementById('qr-canvas');
+  if (!video.videoWidth) { scanLoop = requestAnimationFrame(scanFrame); return; }
+  canvas.width  = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx  = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0);
+  const img  = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const code = jsQR(img.data, img.width, img.height);
+  if (code) {
+    stopCamera();
+    sendVerifyQR(code.data);
+  } else {
+    scanLoop = requestAnimationFrame(scanFrame);
+  }
+}
+
+function verifyQRFromFile(input) {
+  const file   = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img  = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width  = img.width;
+      canvas.height = img.height;
+      const ctx  = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const data = ctx.getImageData(0, 0, img.width, img.height);
+      const code = jsQR(data.data, data.width, data.height);
+      if (code) sendVerifyQR(code.data);
+      else showResult('unverifiable', 'No QR code detected in this image. Please try a clearer photo.');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function sendVerifyQR(qrData) {
+  showVerifying();
+  try {
+    const res  = await fetch(`${API.VERIFICATION}/verify/qr/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ qr_data: qrData }),
+    });
+    handleVerifyResponse(await res.json(), res.ok);
+  } catch (e) { showResult('unverifiable', 'Connection error. Please try again.'); }
+}
+
+/* ── Serial number ── */
+async function verifyBySerial() {
+  const serial = document.getElementById('serial-input').value.trim();
+  if (!serial) { showResult('error', 'Please enter a serial number.'); return; }
+  setLoading('serial-btn', true, 'Verifying...');
+  try {
+    const res  = await fetch(`${API.VERIFICATION}/verify/serial/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ serial_number: serial }),
+    });
+    handleVerifyResponse(await res.json(), res.ok);
+  } catch (e) { showResult('unverifiable', 'Connection error.'); }
+  finally { setLoading('serial-btn', false, 'Verify'); }
+}
+
+/* ── Signature ── */
+function verifySignature(input) {
+  sigFile = input.files[0];
+  if (sigFile) {
+    document.getElementById('sig-filename').textContent = '📎 ' + sigFile.name;
+    document.getElementById('sig-btn').style.display = 'inline-block';
+  }
+}
+
+async function submitSignatureVerify() {
+  if (!sigFile) return;
+  setLoading('sig-btn', true, 'Verifying...');
+  const fd = new FormData();
+  fd.append('file', sigFile);
+  try {
+    const res  = await fetch(`${API.VERIFICATION}/verify/signature/`, { method: 'POST', body: fd });
+    handleVerifyResponse(await res.json(), res.ok);
+  } catch (e) { showResult('unverifiable', 'Connection error.'); }
+  finally { setLoading('sig-btn', false, 'Verify signature'); }
+}
+
+/* ── OCR ── */
+function showOCRPreview(input) {
+  ocrFile = input.files[0];
+  if (ocrFile) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('ocr-preview').src  = e.target.result;
+      document.getElementById('ocr-preview').style.display = 'block';
+      document.getElementById('ocr-btn').style.display = 'inline-block';
+    };
+    reader.readAsDataURL(ocrFile);
+  }
+}
+
+async function submitOCRVerify() {
+  if (!ocrFile) return;
+  setLoading('ocr-btn', true, 'Scanning...');
+  const fd = new FormData();
+  fd.append('image', ocrFile);
+  try {
+    const res  = await fetch(`${API.VERIFICATION}/verify/ocr/`, { method: 'POST', body: fd });
+    handleVerifyResponse(await res.json(), res.ok);
+  } catch (e) { showResult('unverifiable', 'Connection error.'); }
+  finally { setLoading('ocr-btn', false, 'Scan & verify'); }
+}
+
+/* ── Watermark ── */
+function showWMPreview(input) {
+  wmFile = input.files[0];
+  if (wmFile) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('wm-preview').src   = e.target.result;
+      document.getElementById('wm-preview').style.display = 'block';
+      document.getElementById('wm-btn').style.display = 'inline-block';
+    };
+    reader.readAsDataURL(wmFile);
+  }
+}
+
+async function submitWatermarkVerify() {
+  if (!wmFile) return;
+  setLoading('wm-btn', true, 'Detecting...');
+  const fd = new FormData();
+  fd.append('image', wmFile);
+  try {
+    const res  = await fetch(`${API.VERIFICATION}/verify/watermark/`, { method: 'POST', body: fd });
+    handleVerifyResponse(await res.json(), res.ok);
+  } catch (e) { showResult('unverifiable', 'Connection error.'); }
+  finally { setLoading('wm-btn', false, 'Detect & verify'); }
+}
+
+/* ── Result rendering ── */
+function handleVerifyResponse(data, ok) {
+  if (!ok) { showResult('unverifiable', data.detail || 'Verification failed.'); return; }
+  const status = data.status?.toUpperCase();
+  if (status === 'AUTHENTIC') showResultAuthentic(data);
+  else if (status === 'NOT_AUTHENTIC') showResult('not-authentic', data.message || 'No matching record found.');
+  else showResult('unverifiable', data.message || 'Could not verify this item.');
+}
+
+function showVerifying() {
+  document.getElementById('result-area').innerHTML = `
+    <div class="q-card" style="text-align:center;padding:32px">
+      <div class="q-spinner" style="margin:0 auto 12px"></div>
+      <div style="color:var(--q-text-muted);font-size:14px">Querying blockchain...</div>
+    </div>`;
+  document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
+}
+
+function showResultAuthentic(data) {
+  document.getElementById('result-area').innerHTML = `
+    <div class="q-result-authentic">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <div style="width:44px;height:44px;background:#4ADE80;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff">✓</div>
+        <div>
+          <div class="q-result-title">AUTHENTIC</div>
+          <div style="font-size:13px;color:#065F46">Verified on blockchain</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px">
+        ${data.item_name    ? `<div><div style="font-size:11px;color:#065F46;font-weight:500;margin-bottom:2px">ITEM</div><div style="font-size:14px">${data.item_name}</div></div>` : ''}
+        ${data.category     ? `<div><div style="font-size:11px;color:#065F46;font-weight:500;margin-bottom:2px">CATEGORY</div><div style="font-size:14px">${data.category}</div></div>` : ''}
+        ${data.issuer_name  ? `<div><div style="font-size:11px;color:#065F46;font-weight:500;margin-bottom:2px">ISSUED BY</div><div style="font-size:14px">${data.issuer_name}</div></div>` : ''}
+        ${data.issued_date  ? `<div><div style="font-size:11px;color:#065F46;font-weight:500;margin-bottom:2px">ISSUE DATE</div><div style="font-size:14px">${formatDate(data.issued_date)}</div></div>` : ''}
+      </div>
+      ${data.blockchain_hash ? `
+        <div style="margin-bottom:12px">
+          <div style="font-size:11px;color:#065F46;font-weight:500;margin-bottom:4px">BLOCKCHAIN RECORD</div>
+          <div class="q-hash">${data.blockchain_hash}</div>
+        </div>` : ''}
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <span class="q-blockchain-badge">⛓ On-chain verified</span>
+        <button onclick="reportItem('${data.item_id}')" style="background:none;border:none;font-size:13px;color:#065F46;cursor:pointer;padding:0;text-decoration:underline">Report as suspicious</button>
+      </div>
+    </div>`;
+  document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
+}
+
+function showResult(type, message) {
+  const config = {
+    'not-authentic': { cls: 'q-result-not-authentic', icon: '✗', title: 'NOT AUTHENTIC', color: '#991B1B' },
+    'unverifiable':  { cls: 'q-result-unverifiable',  icon: '?', title: 'UNVERIFIABLE',  color: '#6B7A90' },
+    'error':         { cls: 'q-result-unverifiable',  icon: '!', title: 'Error',          color: '#6B7A90' },
+  };
+  const c = config[type] || config['unverifiable'];
+  document.getElementById('result-area').innerHTML = `
+    <div class="${c.cls}">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:44px;height:44px;background:${c.color};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;font-weight:600">${c.icon}</div>
+        <div>
+          <div class="q-result-title">${c.title}</div>
+          <div style="font-size:14px;color:var(--q-text-muted);margin-top:4px">${message}</div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function reportItem(itemId) {
+  if (!confirm('Report this item as suspicious?')) return;
+  await fetch(`${API.VERIFICATION}/report/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ item_id: itemId }),
+  });
+  showToast('Report submitted. Thank you.');
+}
+</script>
+</body>
+</html>

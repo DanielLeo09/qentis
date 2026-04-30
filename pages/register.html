@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — Qentis</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="../assets/css/main.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="q-auth-page">
+  <div class="q-auth-card" style="max-width:500px">
+
+    <div class="q-auth-logo">
+      <a href="../index.html" class="q-logo">Qen<span>tis</span></a>
+    </div>
+
+    <h1 class="q-auth-title">Create account</h1>
+    <p class="q-auth-subtitle">Join Qentis as an issuer or item owner</p>
+
+    <div id="alert" class="q-alert"></div>
+
+    <!-- Role selector -->
+    <div class="q-form-group">
+      <label class="q-label">I am registering as</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div id="role-issuer" class="role-option active" onclick="selectRole('ISSUER')">
+          <div style="font-size:20px;margin-bottom:6px">🏢</div>
+          <div style="font-size:13px;font-weight:500;color:var(--q-primary)">Issuer</div>
+          <div style="font-size:11px;color:var(--q-text-muted)">University, hospital, bank...</div>
+        </div>
+        <div id="role-owner" class="role-option" onclick="selectRole('ITEM_OWNER')">
+          <div style="font-size:20px;margin-bottom:6px">👤</div>
+          <div style="font-size:13px;font-weight:500;color:var(--q-primary)">Item Owner</div>
+          <div style="font-size:11px;color:var(--q-text-muted)">Student, patient, citizen...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="q-form-group">
+      <label class="q-label" for="name">Full name</label>
+      <input type="text" id="name" class="q-input" placeholder="Jean Dupont"/>
+    </div>
+
+    <div class="q-form-group">
+      <label class="q-label" for="email">Email address</label>
+      <input type="email" id="email" class="q-input" placeholder="you@example.com"/>
+    </div>
+
+    <!-- Issuer-only fields -->
+    <div id="issuer-fields">
+      <div class="q-form-group">
+        <label class="q-label" for="institution-name">Institution name</label>
+        <input type="text" id="institution-name" class="q-input" placeholder="ICT University"/>
+      </div>
+      <div class="q-form-group">
+        <label class="q-label" for="institution-type">Institution type</label>
+        <select id="institution-type" class="q-select">
+          <option value="">Select type...</option>
+          <option value="university">University / School</option>
+          <option value="hospital">Hospital / Clinic</option>
+          <option value="government">Government body</option>
+          <option value="bank">Bank / Financial institution</option>
+          <option value="pharma">Pharmaceutical company</option>
+          <option value="notary">Notary / Legal body</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="q-form-group">
+      <label class="q-label" for="password">Password</label>
+      <input type="password" id="password" class="q-input" placeholder="At least 8 characters"/>
+    </div>
+
+    <div class="q-form-group">
+      <label class="q-label" for="password2">Confirm password</label>
+      <input type="password" id="password2" class="q-input" placeholder="Repeat password"/>
+    </div>
+
+    <button id="register-btn" class="btn-q-primary w-100 mt-2" onclick="handleRegister()">
+      Create account
+    </button>
+
+    <p style="text-align:center;font-size:13px;color:var(--q-text-muted);margin-top:20px">
+      Already have an account? <a href="login.html">Sign in</a>
+    </p>
+
+  </div>
+</div>
+
+<style>
+  .role-option {
+    border: 1.5px solid var(--q-border);
+    border-radius: var(--q-radius);
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .role-option:hover { border-color: var(--q-primary-light); }
+  .role-option.active {
+    border-color: var(--q-primary-light);
+    background: #EEF4FF;
+  }
+</style>
+
+<script src="../assets/js/api.js"></script>
+<script>
+  let selectedRole = 'ISSUER';
+
+  function selectRole(role) {
+    selectedRole = role;
+    document.getElementById('role-issuer').classList.toggle('active', role === 'ISSUER');
+    document.getElementById('role-owner').classList.toggle('active', role === 'ITEM_OWNER');
+    document.getElementById('issuer-fields').style.display = role === 'ISSUER' ? 'block' : 'none';
+  }
+
+  async function handleRegister() {
+    const name      = document.getElementById('name').value.trim();
+    const email     = document.getElementById('email').value.trim();
+    const password  = document.getElementById('password').value;
+    const password2 = document.getElementById('password2').value;
+
+    if (!name || !email || !password) {
+      showAlert('alert', 'Please fill in all required fields.', 'error');
+      return;
+    }
+    if (password !== password2) {
+      showAlert('alert', 'Passwords do not match.', 'error');
+      return;
+    }
+    if (password.length < 8) {
+      showAlert('alert', 'Password must be at least 8 characters.', 'error');
+      return;
+    }
+
+    const body = { name, email, password, role: selectedRole };
+
+    if (selectedRole === 'ISSUER') {
+      body.institution_name = document.getElementById('institution-name').value.trim();
+      body.institution_type = document.getElementById('institution-type').value;
+      if (!body.institution_name || !body.institution_type) {
+        showAlert('alert', 'Please fill in institution details.', 'error');
+        return;
+      }
+    }
+
+    setLoading('register-btn', true, 'Creating account...');
+    hideAlert('alert');
+
+    try {
+      const res  = await fetch(`${API.AUTH}/auth/register/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        if (selectedRole === 'ISSUER') {
+          window.location.href = 'pending-approval.html';
+        } else {
+          Auth.setToken(data.access);
+          Auth.setUser(data.user);
+          window.location.href = '../pages/owner/dashboard.html';
+        }
+      } else {
+        const msg = data.email?.[0] || data.detail || 'Registration failed.';
+        showAlert('alert', msg, 'error');
+      }
+    } catch (e) {
+      showAlert('alert', 'Connection error. Please try again.', 'error');
+    } finally {
+      setLoading('register-btn', false, 'Create account');
+    }
+  }
+</script>
+</body>
+</html>

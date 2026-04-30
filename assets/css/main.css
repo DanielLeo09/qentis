@@ -1,0 +1,498 @@
+/* ============================================================
+   QENTIS — Main Stylesheet
+   Design system: CSS variables + Bootstrap 5 overrides
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* ── Design tokens ── */
+:root {
+  --q-primary:       #1A3A5C;   /* deep navy */
+  --q-primary-light: #2563A8;
+  --q-accent:        #00C896;   /* blockchain green */
+  --q-accent-dark:   #009E78;
+  --q-danger:        #E63946;
+  --q-warning:       #F4A261;
+  --q-success:       #2DC653;
+  --q-bg:            #F4F7FB;
+  --q-surface:       #FFFFFF;
+  --q-border:        #DDE3ED;
+  --q-text:          #1A2B3C;
+  --q-text-muted:    #6B7A90;
+  --q-sidebar-w:     240px;
+  --q-radius:        10px;
+  --q-shadow:        0 2px 12px rgba(26,58,92,.08);
+  --q-font:          'Sora', sans-serif;
+  --q-mono:          'IBM Plex Mono', monospace;
+}
+
+/* ── Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: var(--q-font);
+  background: var(--q-bg);
+  color: var(--q-text);
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+a { color: var(--q-primary-light); text-decoration: none; }
+a:hover { color: var(--q-accent-dark); }
+
+h1, h2, h3, h4, h5, h6 { font-weight: 600; color: var(--q-primary); }
+
+/* ── Navbar ── */
+.q-navbar {
+  background: var(--q-surface);
+  border-bottom: 1px solid var(--q-border);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  box-shadow: var(--q-shadow);
+}
+
+.q-logo {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--q-primary);
+  letter-spacing: -0.5px;
+}
+
+.q-logo span {
+  color: var(--q-accent);
+}
+
+/* ── Sidebar ── */
+.q-sidebar {
+  width: var(--q-sidebar-w);
+  background: var(--q-surface);
+  border-right: 1px solid var(--q-border);
+  position: fixed;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  padding: 20px 0;
+  z-index: 900;
+}
+
+.q-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  color: var(--q-text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all .15s;
+  border-left: 3px solid transparent;
+}
+
+.q-sidebar-link:hover {
+  background: var(--q-bg);
+  color: var(--q-primary);
+  border-left-color: var(--q-border);
+}
+
+.q-sidebar-link.active {
+  color: var(--q-primary-light);
+  background: #EEF4FF;
+  border-left-color: var(--q-primary-light);
+}
+
+.q-sidebar-link svg { flex-shrink: 0; }
+
+.q-sidebar-section {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--q-text-muted);
+  padding: 16px 20px 6px;
+}
+
+/* ── Main content area ── */
+.q-main {
+  margin-left: var(--q-sidebar-w);
+  margin-top: 60px;
+  padding: 28px 32px;
+  min-height: calc(100vh - 60px);
+}
+
+/* ── Page header ── */
+.q-page-header {
+  margin-bottom: 28px;
+}
+
+.q-page-header h1 {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.q-page-header p {
+  color: var(--q-text-muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ── Cards ── */
+.q-card {
+  background: var(--q-surface);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius);
+  padding: 24px;
+  box-shadow: var(--q-shadow);
+}
+
+.q-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--q-primary);
+  margin-bottom: 16px;
+}
+
+/* ── Stat cards ── */
+.q-stat {
+  background: var(--q-surface);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius);
+  padding: 20px 24px;
+  box-shadow: var(--q-shadow);
+}
+
+.q-stat-value {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--q-primary);
+  font-family: var(--q-mono);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.q-stat-label {
+  font-size: 13px;
+  color: var(--q-text-muted);
+}
+
+.q-stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+/* ── Buttons ── */
+.btn-q-primary {
+  background: var(--q-primary);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--q-radius);
+  font-family: var(--q-font);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.btn-q-primary:hover { background: var(--q-primary-light); color: #fff; }
+
+.btn-q-accent {
+  background: var(--q-accent);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--q-radius);
+  font-family: var(--q-font);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.btn-q-accent:hover { background: var(--q-accent-dark); color: #fff; }
+
+.btn-q-outline {
+  background: transparent;
+  color: var(--q-primary);
+  border: 1.5px solid var(--q-border);
+  padding: 9px 20px;
+  border-radius: var(--q-radius);
+  font-family: var(--q-font);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.btn-q-outline:hover {
+  border-color: var(--q-primary-light);
+  color: var(--q-primary-light);
+}
+
+/* ── Badges ── */
+.q-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+
+.q-badge-pending  { background: #FFF3CD; color: #856404; }
+.q-badge-approved { background: #D1FAE5; color: #065F46; }
+.q-badge-rejected { background: #FEE2E2; color: #991B1B; }
+.q-badge-active   { background: #DBEAFE; color: #1E40AF; }
+
+/* ── Verification result cards ── */
+.q-result-authentic {
+  background: #F0FDF4;
+  border: 1.5px solid #4ADE80;
+  border-radius: var(--q-radius);
+  padding: 24px;
+}
+
+.q-result-not-authentic {
+  background: #FFF1F2;
+  border: 1.5px solid var(--q-danger);
+  border-radius: var(--q-radius);
+  padding: 24px;
+}
+
+.q-result-unverifiable {
+  background: #F8FAFC;
+  border: 1.5px solid var(--q-border);
+  border-radius: var(--q-radius);
+  padding: 24px;
+}
+
+.q-result-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.q-result-authentic   .q-result-title { color: #065F46; }
+.q-result-not-authentic .q-result-title { color: #991B1B; }
+.q-result-unverifiable  .q-result-title { color: var(--q-text-muted); }
+
+/* ── Tables ── */
+.q-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.q-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--q-text-muted);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--q-border);
+}
+
+.q-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--q-border);
+  color: var(--q-text);
+}
+
+.q-table tr:last-child td { border-bottom: none; }
+.q-table tr:hover td { background: var(--q-bg); }
+
+/* ── Forms ── */
+.q-form-group { margin-bottom: 18px; }
+
+.q-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--q-text);
+  margin-bottom: 6px;
+}
+
+.q-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--q-border);
+  border-radius: var(--q-radius);
+  font-family: var(--q-font);
+  font-size: 14px;
+  color: var(--q-text);
+  background: var(--q-surface);
+  transition: border-color .15s;
+  outline: none;
+}
+
+.q-input:focus {
+  border-color: var(--q-primary-light);
+  box-shadow: 0 0 0 3px rgba(37,99,168,.1);
+}
+
+.q-input::placeholder { color: var(--q-text-muted); }
+
+.q-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--q-border);
+  border-radius: var(--q-radius);
+  font-family: var(--q-font);
+  font-size: 14px;
+  color: var(--q-text);
+  background: var(--q-surface);
+  outline: none;
+  cursor: pointer;
+}
+
+.q-select:focus { border-color: var(--q-primary-light); }
+
+/* ── File upload zone ── */
+.q-upload-zone {
+  border: 2px dashed var(--q-border);
+  border-radius: var(--q-radius);
+  padding: 36px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .15s;
+  background: var(--q-bg);
+}
+
+.q-upload-zone:hover {
+  border-color: var(--q-primary-light);
+  background: #EEF4FF;
+}
+
+.q-upload-zone p {
+  color: var(--q-text-muted);
+  font-size: 14px;
+  margin: 8px 0 0;
+}
+
+/* ── Hash display ── */
+.q-hash {
+  font-family: var(--q-mono);
+  font-size: 12px;
+  background: var(--q-bg);
+  border: 1px solid var(--q-border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  word-break: break-all;
+  color: var(--q-primary);
+}
+
+/* ── Blockchain timestamp ── */
+.q-blockchain-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #F0FDF4;
+  border: 1px solid #4ADE80;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: #065F46;
+  font-weight: 500;
+}
+
+/* ── Auth pages ── */
+.q-auth-page {
+  min-height: 100vh;
+  background: var(--q-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.q-auth-card {
+  background: var(--q-surface);
+  border: 1px solid var(--q-border);
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 8px 32px rgba(26,58,92,.10);
+}
+
+.q-auth-logo {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.q-auth-logo .q-logo { font-size: 26px; }
+
+.q-auth-title {
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.q-auth-subtitle {
+  font-size: 14px;
+  color: var(--q-text-muted);
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+/* ── Alert messages ── */
+.q-alert {
+  padding: 12px 16px;
+  border-radius: var(--q-radius);
+  font-size: 14px;
+  margin-bottom: 16px;
+  display: none;
+}
+
+.q-alert.show { display: block; }
+.q-alert-error   { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
+.q-alert-success { background: #D1FAE5; color: #065F46; border: 1px solid #6EE7B7; }
+.q-alert-info    { background: #DBEAFE; color: #1E40AF; border: 1px solid #93C5FD; }
+
+/* ── Tabs (verification methods) ── */
+.q-method-tabs .nav-link {
+  color: var(--q-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid transparent;
+}
+
+.q-method-tabs .nav-link.active {
+  color: var(--q-primary);
+  background: var(--q-surface);
+  border-color: var(--q-border);
+  border-bottom-color: var(--q-surface);
+}
+
+/* ── Loading spinner ── */
+.q-spinner {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border: 2px solid var(--q-border);
+  border-top-color: var(--q-primary-light);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .q-sidebar { display: none; }
+  .q-main { margin-left: 0; padding: 20px 16px; }
+}

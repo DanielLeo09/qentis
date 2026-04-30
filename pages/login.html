@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign in — Qentis</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="../assets/css/main.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="q-auth-page">
+  <div class="q-auth-card">
+
+    <div class="q-auth-logo">
+      <a href="../index.html" class="q-logo">Qen<span>tis</span></a>
+    </div>
+
+    <h1 class="q-auth-title">Sign in</h1>
+    <p class="q-auth-subtitle">Access your Qentis dashboard</p>
+
+    <div id="alert" class="q-alert"></div>
+
+    <div class="q-form-group">
+      <label class="q-label" for="email">Email address</label>
+      <input type="email" id="email" class="q-input" placeholder="you@example.com" autocomplete="email"/>
+    </div>
+
+    <div class="q-form-group">
+      <label class="q-label" for="password">Password</label>
+      <input type="password" id="password" class="q-input" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+
+    <button id="login-btn" class="btn-q-primary w-100 mt-2" onclick="handleLogin()">
+      Sign in
+    </button>
+
+    <p style="text-align:center;font-size:13px;color:var(--q-text-muted);margin-top:20px">
+      Don't have an account?
+      <a href="register.html">Register here</a>
+    </p>
+
+    <div style="text-align:center;margin-top:12px">
+      <a href="verifier/verify.html" style="font-size:13px;color:var(--q-text-muted)">
+        Verify an item without an account →
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script>
+  /* Redirect if already logged in */
+  if (Auth.getToken()) redirectByRole(Auth.getUser()?.role);
+
+  async function handleLogin() {
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!email || !password) {
+      showAlert('alert', 'Please fill in all fields.', 'error');
+      return;
+    }
+
+    setLoading('login-btn', true, 'Signing in...');
+    hideAlert('alert');
+
+    try {
+      const res = await fetch(`${API.AUTH}/auth/login/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        Auth.setToken(data.access);
+        Auth.setUser(data.user);
+        redirectByRole(data.user.role);
+      } else {
+        showAlert('alert', data.detail || 'Invalid credentials.', 'error');
+      }
+    } catch (e) {
+      showAlert('alert', 'Connection error. Please try again.', 'error');
+    } finally {
+      setLoading('login-btn', false, 'Sign in');
+    }
+  }
+
+  function redirectByRole(role) {
+    if (!role) return;
+    const map = {
+      ISSUER:     '../pages/issuer/dashboard.html',
+      ITEM_OWNER: '../pages/owner/dashboard.html',
+      ADMIN:      '../pages/admin/dashboard.html',
+    };
+    window.location.href = map[role] || '../index.html';
+  }
+
+  /* Allow Enter key to submit */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleLogin();
+  });
+</script>
+</body>
+</html>
