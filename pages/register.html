@@ -7,67 +7,91 @@
   <link href="../assets/css/register.css" rel="stylesheet"/>
 </head>
 <body>
-<div class="q-auth-page">
-  <div class="q-auth-card q-auth-card--wide">
 
-    <div class="q-auth-logo">
-      <a href="../index.html" class="q-logo">Qen<span>tis</span></a>
+<div class="q-auth-split">
+
+  <!-- Left: brand panel -->
+  <aside class="q-auth-brand">
+    <div class="q-brand-logo">
+      <a href="../index.html" class="q-logo q-logo--lg">Qen<span>tis</span></a>
     </div>
-
-    <h1 class="q-auth-title">Register as issuer</h1>
-    <p class="q-auth-subtitle">Create an institution account to register and authenticate items</p>
-
-    <div id="alert" class="q-alert"></div>
-
-    <div class="q-form-group">
-      <label class="q-label" for="name">Full name</label>
-      <input type="text" id="name" class="q-input" placeholder="Jean Dupont"/>
+    <div class="q-brand-body">
+      <h2>Become a trusted<br><span>issuer</span> on Qentis</h2>
+      <p>Register your institution and start issuing blockchain-verified certificates, documents, and more — readable by anyone, anywhere.</p>
+      <ul class="q-brand-features">
+        <li>Instant blockchain registration</li>
+        <li>QR, serial &amp; watermark protection</li>
+        <li>Real-time fraud alerts</li>
+        <li>Trusted by 340+ institutions</li>
+      </ul>
     </div>
+    <div class="q-brand-foot">Qentis · Secure by design</div>
+  </aside>
 
-    <div class="q-form-group">
-      <label class="q-label" for="email">Email address</label>
-      <input type="email" id="email" class="q-input" placeholder="you@example.com"/>
-    </div>
+  <!-- Right: form panel -->
+  <main class="q-auth-main">
+    <div class="q-auth-card q-auth-card--wide">
 
-    <div id="issuer-fields">
-      <div class="q-form-group">
-        <label class="q-label" for="institution-name">Institution name</label>
-        <input type="text" id="institution-name" class="q-input" placeholder="ICT University"/>
+      <div class="q-auth-logo">
+        <a href="../index.html" class="q-logo">Qen<span>tis</span></a>
       </div>
+
+      <h1 class="q-auth-title">Register as issuer</h1>
+      <p class="q-auth-subtitle">Create an institution account to register and authenticate items</p>
+
+      <div id="alert" class="q-alert"></div>
+
       <div class="q-form-group">
-        <label class="q-label" for="institution-type">Institution type</label>
-        <select id="institution-type" class="q-select">
-          <option value="">Select type...</option>
-          <option value="university">University / School</option>
-          <option value="hospital">Hospital / Clinic</option>
-          <option value="government">Government body</option>
-          <option value="bank">Bank / Financial institution</option>
-          <option value="pharma">Pharmaceutical company</option>
-          <option value="notary">Notary / Legal body</option>
-          <option value="other">Other</option>
-        </select>
+        <label class="q-label" for="name">Full name</label>
+        <input type="text" id="name" class="q-input" placeholder="Jean Dupont"/>
       </div>
+
+      <div class="q-form-group">
+        <label class="q-label" for="email">Email address</label>
+        <input type="email" id="email" class="q-input" placeholder="you@example.com"/>
+      </div>
+
+      <div id="issuer-fields">
+        <div class="q-form-group">
+          <label class="q-label" for="institution-name">Institution name</label>
+          <input type="text" id="institution-name" class="q-input" placeholder="ICT University"/>
+        </div>
+        <div class="q-form-group">
+          <label class="q-label" for="institution-type">Institution type</label>
+          <select id="institution-type" class="q-select">
+            <option value="">Select type...</option>
+            <option value="university">University / School</option>
+            <option value="hospital">Hospital / Clinic</option>
+            <option value="government">Government body</option>
+            <option value="bank">Bank / Financial institution</option>
+            <option value="pharma">Pharmaceutical company</option>
+            <option value="notary">Notary / Legal body</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="q-form-group">
+        <label class="q-label" for="password">Password</label>
+        <input type="password" id="password" class="q-input" placeholder="At least 8 characters"/>
+      </div>
+
+      <div class="q-form-group">
+        <label class="q-label" for="password2">Confirm password</label>
+        <input type="password" id="password2" class="q-input" placeholder="Repeat password"/>
+      </div>
+
+      <button id="register-btn" class="btn-q-primary w-100 mt-2" onclick="handleRegister()">
+        Create account
+      </button>
+
+      <p class="q-auth-footer-text">
+        Already have an account? <a href="login.html">Sign in</a>
+      </p>
+
     </div>
+  </main>
 
-    <div class="q-form-group">
-      <label class="q-label" for="password">Password</label>
-      <input type="password" id="password" class="q-input" placeholder="At least 8 characters"/>
-    </div>
-
-    <div class="q-form-group">
-      <label class="q-label" for="password2">Confirm password</label>
-      <input type="password" id="password2" class="q-input" placeholder="Repeat password"/>
-    </div>
-
-    <button id="register-btn" class="btn-q-primary w-100 mt-2" onclick="handleRegister()">
-      Create account
-    </button>
-
-    <p class="q-auth-footer-text">
-      Already have an account? <a href="login.html">Sign in</a>
-    </p>
-
-  </div>
 </div>
 
 <script src="../assets/js/api.js"></script>

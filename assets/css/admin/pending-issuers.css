@@ -5,14 +5,14 @@
   --q-accent-dark:   #C9992A;
   --q-danger:        #F87171;
   --q-success:       #34D399;
-  --q-bg:            #0D0B15;
-  --q-surface:       #12101A;
-  --q-border:        rgba(240,192,64,.14);
+  --q-bg:            #080611;
+  --q-surface:       #0D0B1A;
+  --q-border:        rgba(240,192,64,.12);
   --q-text:          #F1EEF9;
   --q-text-muted:    #8A8399;
-  --q-sidebar-w:     240px;
-  --q-radius:        10px;
-  --q-shadow:        0 2px 16px rgba(0,0,0,.45);
+  --q-sidebar-w:     248px;
+  --q-radius:        12px;
+  --q-shadow:        0 4px 24px rgba(0,0,0,.45);
   --q-font:          'Sora', sans-serif;
   --q-mono:          'IBM Plex Mono', monospace;
 }

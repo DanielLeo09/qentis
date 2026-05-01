@@ -7,44 +7,68 @@
   <link href="../assets/css/login.css" rel="stylesheet"/>
 </head>
 <body>
-<div class="q-auth-page">
-  <div class="q-auth-card">
 
-    <div class="q-auth-logo">
-      <a href="../index.html" class="q-logo">Qen<span>tis</span></a>
+<div class="q-auth-split">
+
+  <!-- Left: brand panel -->
+  <aside class="q-auth-brand">
+    <div class="q-brand-logo">
+      <a href="../index.html" class="q-logo q-logo--lg">Qen<span>tis</span></a>
     </div>
-
-    <h1 class="q-auth-title">Sign in</h1>
-    <p class="q-auth-subtitle">Access your Qentis dashboard</p>
-
-    <div id="alert" class="q-alert"></div>
-
-    <div class="q-form-group">
-      <label class="q-label" for="email">Email address</label>
-      <input type="email" id="email" class="q-input" placeholder="you@example.com" autocomplete="email"/>
+    <div class="q-brand-body">
+      <h2>Verify <span>authenticity</span><br>with confidence</h2>
+      <p>Blockchain-powered verification for diplomas, medicines, documents, and more — trusted by institutions worldwide.</p>
+      <ul class="q-brand-features">
+        <li>Immutable blockchain records</li>
+        <li>AI-powered fraud detection</li>
+        <li>5 verification methods</li>
+        <li>Results in under 3 seconds</li>
+      </ul>
     </div>
+    <div class="q-brand-foot">Trusted by 340+ institutions worldwide</div>
+  </aside>
 
-    <div class="q-form-group">
-      <label class="q-label" for="password">Password</label>
-      <input type="password" id="password" class="q-input" placeholder="••••••••" autocomplete="current-password"/>
+  <!-- Right: form panel -->
+  <main class="q-auth-main">
+    <div class="q-auth-card">
+
+      <div class="q-auth-logo">
+        <a href="../index.html" class="q-logo">Qen<span>tis</span></a>
+      </div>
+
+      <h1 class="q-auth-title">Welcome back</h1>
+      <p class="q-auth-subtitle">Sign in to your Qentis dashboard</p>
+
+      <div id="alert" class="q-alert"></div>
+
+      <div class="q-form-group">
+        <label class="q-label" for="email">Email address</label>
+        <input type="email" id="email" class="q-input" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+
+      <div class="q-form-group">
+        <label class="q-label" for="password">Password</label>
+        <input type="password" id="password" class="q-input" placeholder="••••••••" autocomplete="current-password"/>
+      </div>
+
+      <button id="login-btn" class="btn-q-primary w-100 mt-2" onclick="handleLogin()">
+        Sign in
+      </button>
+
+      <p class="q-auth-footer-text">
+        Don't have an account?
+        <a href="register.html">Register here</a>
+      </p>
+
+      <div class="q-auth-link">
+        <a href="verifier/verify.html" class="q-link-muted">
+          Verify an item without an account →
+        </a>
+      </div>
+
     </div>
+  </main>
 
-    <button id="login-btn" class="btn-q-primary w-100 mt-2" onclick="handleLogin()">
-      Sign in
-    </button>
-
-    <p class="q-auth-footer-text">
-      Don't have an account?
-      <a href="register.html">Register here</a>
-    </p>
-
-    <div class="q-auth-link">
-      <a href="verifier/verify.html" class="q-link-muted">
-        Verify an item without an account →
-      </a>
-    </div>
-
-  </div>
 </div>
 
 <script src="../assets/js/api.js"></script>
