@@ -512,6 +512,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: 600; color: var(--q-text); }
 .g-2 { gap: 8px;  }
 .g-3 { gap: 16px; }
 .g-4 { gap: 24px; }
+.d-none              { display: none !important; }
 @media (min-width: 576px) { .col-sm-6 { width: 50%; } }
 @media (min-width: 768px)  { .col-md-4 { width: 33.333%; } }
 @media (min-width: 992px)  {
@@ -520,7 +521,6 @@ h1, h2, h3, h4, h5, h6 { font-weight: 600; color: var(--q-text); }
   .col-lg-7 { width: 58.333%; }
   .d-lg-flex { display: flex !important; }
 }
-.d-none              { display: none !important; }
 .align-items-center  { align-items: center;    }
 .justify-content-center { justify-content: center; }
 .text-center         { text-align: center;     }
