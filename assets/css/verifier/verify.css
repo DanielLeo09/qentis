@@ -299,9 +299,62 @@ h5 { font-weight: 600; margin: 0 0 4px; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ── Step visibility ── */
+#step-verify  { display: none; }
+#items-empty  { display: none; }
+
+/* ── Step 1: Item search & grid ── */
+.search-wrap { margin-bottom: 20px; }
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.item-card {
+  background: var(--q-surface);
+  border: 1.5px solid var(--q-border);
+  border-radius: var(--q-radius);
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.item-card:hover { border-color: var(--q-accent); background: rgba(240,192,64,.05); }
+
+.item-card-name   { font-weight: 600; font-size: 14px; margin: 8px 0 3px; }
+.item-card-issuer { font-size: 12px; color: var(--q-text-muted); margin-bottom: 2px; }
+.item-card-date   { font-size: 11px; color: var(--q-text-muted); margin-bottom: 10px; }
+.item-card-action { font-size: 12px; color: var(--q-accent); font-weight: 500; }
+
+.items-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--q-text-muted);
+}
+
+/* ── Step 2: Selected item banner ── */
+.selected-item-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: rgba(240,192,64,.07);
+  border: 1px solid rgba(240,192,64,.2);
+  border-radius: var(--q-radius);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.selected-item-name { font-weight: 600; font-size: 15px; margin-bottom: 3px; }
+.selected-item-meta { font-size: 13px; color: var(--q-text-muted); }
+
 /* ── Responsive ── */
 @media (max-width: 600px) {
   .q-method-grid { grid-template-columns: repeat(3, 1fr); }
+  .selected-item-banner { flex-direction: column; align-items: flex-start; }
+  .items-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 400px) {
   .q-method-grid { grid-template-columns: repeat(2, 1fr); }

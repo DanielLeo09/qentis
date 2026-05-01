@@ -14,93 +14,127 @@
 
 <div class="verify-container">
 
-  <div class="verify-header">
-    <h1>Verify an item</h1>
-    <p>No account required. Choose a verification method below.</p>
+  <!-- ── Step 1: Choose item ── -->
+  <div id="step-items">
+    <div class="verify-header">
+      <h1>Verify an item</h1>
+      <p>Search for the item you want to verify, then select it.</p>
+    </div>
+
+    <div class="search-wrap">
+      <input type="text" id="item-search" class="q-input"
+             placeholder="Search by name, category or issuer..."
+             oninput="filterItems(this.value)"/>
+    </div>
+
+    <div id="items-loading" class="q-loading-state">
+      <div class="q-spinner loading-spinner"></div>
+      <div>Loading registered items...</div>
+    </div>
+
+    <div id="items-grid" class="items-grid"></div>
+
+    <div id="items-empty" class="items-empty-state">
+      <div class="q-empty-icon">📭</div>
+      <p>No items found. Try a different search term.</p>
+    </div>
   </div>
 
-  <div id="result-area" class="result-area"></div>
+  <!-- ── Step 2: Verify selected item ── -->
+  <div id="step-verify">
 
-  <div class="q-method-grid">
-    <div class="method-card active" id="m-qr"        onclick="selectMethod('qr')">       <div class="method-icon">📷</div><div class="method-label">QR Code</div></div>
-    <div class="method-card"        id="m-serial"    onclick="selectMethod('serial')">   <div class="method-icon">🔢</div><div class="method-label">Serial No.</div></div>
-    <div class="method-card"        id="m-signature" onclick="selectMethod('signature')"><div class="method-icon">📎</div><div class="method-label">Signature</div></div>
-    <div class="method-card"        id="m-ocr"       onclick="selectMethod('ocr')">      <div class="method-icon">🔍</div><div class="method-label">OCR Photo</div></div>
-    <div class="method-card"        id="m-watermark" onclick="selectMethod('watermark')"><div class="method-icon">💧</div><div class="method-label">Watermark</div></div>
-  </div>
+    <div class="selected-item-banner">
+      <div class="selected-item-info">
+        <div class="selected-item-name" id="selected-name"></div>
+        <div class="selected-item-meta" id="selected-meta"></div>
+      </div>
+      <button class="btn-q-outline" onclick="goBack()">← Change item</button>
+    </div>
 
-  <div class="q-card">
+    <div id="result-area" class="result-area"></div>
 
-    <!-- QR Code panel -->
-    <div class="verify-panel active" id="panel-qr">
-      <h5>Scan QR code</h5>
-      <p class="panel-subtitle">Point your camera at the QR code on the item.</p>
-      <div class="verify-camera-wrap">
-        <video id="camera-feed" autoplay playsinline></video>
-        <canvas id="qr-canvas"></canvas>
-        <div class="verify-camera-controls">
-          <button class="btn-q-primary" onclick="startCamera()" id="start-cam-btn">Start camera</button>
-          <button class="btn-q-outline" onclick="stopCamera()" id="stop-cam-btn">Stop</button>
+    <div class="q-method-grid">
+      <div class="method-card active" id="m-qr"        onclick="selectMethod('qr')">       <div class="method-icon">📷</div><div class="method-label">QR Code</div></div>
+      <div class="method-card"        id="m-serial"    onclick="selectMethod('serial')">   <div class="method-icon">🔢</div><div class="method-label">Serial No.</div></div>
+      <div class="method-card"        id="m-signature" onclick="selectMethod('signature')"><div class="method-icon">📎</div><div class="method-label">Signature</div></div>
+      <div class="method-card"        id="m-ocr"       onclick="selectMethod('ocr')">      <div class="method-icon">🔍</div><div class="method-label">OCR Photo</div></div>
+      <div class="method-card"        id="m-watermark" onclick="selectMethod('watermark')"><div class="method-icon">💧</div><div class="method-label">Watermark</div></div>
+    </div>
+
+    <div class="q-card">
+
+      <!-- QR Code panel -->
+      <div class="verify-panel active" id="panel-qr">
+        <h5>Scan QR code</h5>
+        <p class="panel-subtitle">Point your camera at the QR code on the item.</p>
+        <div class="verify-camera-wrap">
+          <video id="camera-feed" autoplay playsinline></video>
+          <canvas id="qr-canvas"></canvas>
+          <div class="verify-camera-controls">
+            <button class="btn-q-primary" onclick="startCamera()" id="start-cam-btn">Start camera</button>
+            <button class="btn-q-outline" onclick="stopCamera()" id="stop-cam-btn">Stop</button>
+          </div>
+          <p class="verify-hint">Or upload a QR code image:</p>
+          <input type="file" id="qr-file" accept="image/*" onchange="verifyQRFromFile(this)"/>
         </div>
-        <p class="verify-hint">Or upload a QR code image:</p>
-        <input type="file" id="qr-file" accept="image/*" onchange="verifyQRFromFile(this)"/>
       </div>
-    </div>
 
-    <!-- Serial number panel -->
-    <div class="verify-panel" id="panel-serial">
-      <h5>Enter serial number</h5>
-      <p class="panel-subtitle">Type the serial number printed on the item.</p>
-      <div class="q-form-group">
-        <label class="q-label">Serial number</label>
-        <input type="text" id="serial-input" class="q-input q-input-mono" placeholder="e.g. QNT-2026-ACAD-00123"/>
+      <!-- Serial number panel -->
+      <div class="verify-panel" id="panel-serial">
+        <h5>Enter serial number</h5>
+        <p class="panel-subtitle">Type the serial number printed on the item.</p>
+        <div class="q-form-group">
+          <label class="q-label">Serial number</label>
+          <input type="text" id="serial-input" class="q-input q-input-mono" placeholder="e.g. QNT-2026-ACAD-00123"/>
+        </div>
+        <button id="serial-btn" class="btn-q-primary" onclick="verifyBySerial()">Verify</button>
       </div>
-      <button id="serial-btn" class="btn-q-primary" onclick="verifyBySerial()">Verify</button>
-    </div>
 
-    <!-- Digital signature panel -->
-    <div class="verify-panel" id="panel-signature">
-      <h5>Verify digital signature</h5>
-      <p class="panel-subtitle">Upload the original PDF certificate file.</p>
-      <div class="q-upload-zone" onclick="document.getElementById('sig-file').click()">
-        <div class="upload-icon">📎</div>
-        <p>Click to upload PDF or drag and drop</p>
-        <p class="upload-hint">PDF files only · Max 10MB</p>
+      <!-- Digital signature panel -->
+      <div class="verify-panel" id="panel-signature">
+        <h5>Verify digital signature</h5>
+        <p class="panel-subtitle">Upload the original PDF certificate file.</p>
+        <div class="q-upload-zone" onclick="document.getElementById('sig-file').click()">
+          <div class="upload-icon">📎</div>
+          <p>Click to upload PDF or drag and drop</p>
+          <p class="upload-hint">PDF files only · Max 10MB</p>
+        </div>
+        <input type="file" id="sig-file" accept=".pdf" onchange="verifySignature(this)"/>
+        <div id="sig-filename" class="upload-filename"></div>
+        <button id="sig-btn" class="btn-q-primary mt-3" onclick="submitSignatureVerify()">Verify signature</button>
       </div>
-      <input type="file" id="sig-file" accept=".pdf" onchange="verifySignature(this)"/>
-      <div id="sig-filename" class="upload-filename"></div>
-      <button id="sig-btn" class="btn-q-primary mt-3" onclick="submitSignatureVerify()">Verify signature</button>
-    </div>
 
-    <!-- OCR Photo panel -->
-    <div class="verify-panel" id="panel-ocr">
-      <h5>OCR photo scan</h5>
-      <p class="panel-subtitle">Photograph a banknote. Qentis reads the serial number automatically.</p>
-      <div class="q-upload-zone" onclick="document.getElementById('ocr-file').click()">
-        <div class="upload-icon">🔍</div>
-        <p>Upload a photo of the banknote</p>
-        <p class="upload-hint">JPG, PNG · Max 10MB · Good lighting recommended</p>
+      <!-- OCR Photo panel -->
+      <div class="verify-panel" id="panel-ocr">
+        <h5>OCR photo scan</h5>
+        <p class="panel-subtitle">Photograph a banknote. Qentis reads the serial number automatically.</p>
+        <div class="q-upload-zone" onclick="document.getElementById('ocr-file').click()">
+          <div class="upload-icon">🔍</div>
+          <p>Upload a photo of the banknote</p>
+          <p class="upload-hint">JPG, PNG · Max 10MB · Good lighting recommended</p>
+        </div>
+        <input type="file" id="ocr-file" accept="image/*" onchange="showOCRPreview(this)"/>
+        <img id="ocr-preview" class="upload-preview"/>
+        <button id="ocr-btn" class="btn-q-primary mt-3" onclick="submitOCRVerify()">Scan &amp; verify</button>
       </div>
-      <input type="file" id="ocr-file" accept="image/*" onchange="showOCRPreview(this)"/>
-      <img id="ocr-preview" class="upload-preview"/>
-      <button id="ocr-btn" class="btn-q-primary mt-3" onclick="submitOCRVerify()">Scan &amp; verify</button>
-    </div>
 
-    <!-- Watermark panel -->
-    <div class="verify-panel" id="panel-watermark">
-      <h5>Watermark detection</h5>
-      <p class="panel-subtitle">Upload a photograph of the document. Qentis extracts the hidden watermark.</p>
-      <div class="q-upload-zone" onclick="document.getElementById('wm-file').click()">
-        <div class="upload-icon">💧</div>
-        <p>Upload a photo of the document</p>
-        <p class="upload-hint">JPG, PNG · Max 10MB</p>
+      <!-- Watermark panel -->
+      <div class="verify-panel" id="panel-watermark">
+        <h5>Watermark detection</h5>
+        <p class="panel-subtitle">Upload a photograph of the document. Qentis extracts the hidden watermark.</p>
+        <div class="q-upload-zone" onclick="document.getElementById('wm-file').click()">
+          <div class="upload-icon">💧</div>
+          <p>Upload a photo of the document</p>
+          <p class="upload-hint">JPG, PNG · Max 10MB</p>
+        </div>
+        <input type="file" id="wm-file" accept="image/*" onchange="showWMPreview(this)"/>
+        <img id="wm-preview" class="upload-preview"/>
+        <button id="wm-btn" class="btn-q-primary mt-3" onclick="submitWatermarkVerify()">Detect &amp; verify</button>
       </div>
-      <input type="file" id="wm-file" accept="image/*" onchange="showWMPreview(this)"/>
-      <img id="wm-preview" class="upload-preview"/>
-      <button id="wm-btn" class="btn-q-primary mt-3" onclick="submitWatermarkVerify()">Detect &amp; verify</button>
-    </div>
 
+    </div>
   </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
