@@ -1,15 +1,18 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>All Activity — Qentis</title>  <link href="../../assets/css/admin/activity.css" rel="stylesheet"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>All Activity — Qentis</title>
+  <link href="../../assets/css/admin/activity.css" rel="stylesheet"/>
 </head>
-<body>
+<body data-role="ADMIN" data-sidebar="admin" data-page="activity">
 <script src="../../assets/js/api.js"></script>
 <script src="../../assets/js/layout.js"></script>
-<script>Auth.guard('ADMIN'); injectNavbar(); injectSidebar('admin','activity');</script>
+<script src="../../assets/js/init.js"></script>
 <main class="q-main">
   <div class="q-page-header"><h1>All Activity</h1><p>Full implementation coming in Week 2/3</p></div>
-  <div class="q-card"><p style="color:var(--q-text-muted)">🚧 Stub page — connect to backend API</p></div>
+  <div class="q-card"><p class="stub-note">🚧 Stub page — connect to backend API</p></div>
 </main>
-</body></html>
+</body>
+</html>

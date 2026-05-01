@@ -298,3 +298,6 @@ h1, h2, h3, h4, h5, h6 { font-weight: 600; color: var(--q-text); }
   .q-sidebar { display: none; }
   .q-main { margin-left: 0; padding: 20px 16px; }
 }
+
+/* ── Stub note ── */
+.stub-note { color: var(--q-text-muted); }

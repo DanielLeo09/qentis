@@ -142,3 +142,7 @@ a:hover { color: var(--q-accent-dark); }
   animation: spin .7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Register extras ── */
+.q-auth-card--wide  { max-width: 500px; }
+.q-auth-footer-text { text-align: center; font-size: 13px; color: var(--q-text-muted); margin-top: 20px; }

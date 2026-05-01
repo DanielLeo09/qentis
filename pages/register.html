@@ -1,16 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Register — Qentis</title>  <link href="../assets/css/register.css" rel="stylesheet"/>
+  <title>Register — Qentis</title>
+  <link href="../assets/css/register.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="q-auth-page">
-  <div class="q-auth-card" style="max-width:500px">
+  <div class="q-auth-card q-auth-card--wide">
 
     <div class="q-auth-logo">
-      <a href="../../index.html" class="q-logo">Qen<span>tis</span></a>
+      <a href="../index.html" class="q-logo">Qen<span>tis</span></a>
     </div>
 
     <h1 class="q-auth-title">Register as issuer</h1>
@@ -62,7 +63,7 @@
       Create account
     </button>
 
-    <p style="text-align:center;font-size:13px;color:var(--q-text-muted);margin-top:20px">
+    <p class="q-auth-footer-text">
       Already have an account? <a href="login.html">Sign in</a>
     </p>
 
@@ -70,56 +71,6 @@
 </div>
 
 <script src="../assets/js/api.js"></script>
-<script>
-  async function handleRegister() {
-    const name      = document.getElementById('name').value.trim();
-    const email     = document.getElementById('email').value.trim();
-    const password  = document.getElementById('password').value;
-    const password2 = document.getElementById('password2').value;
-
-    if (!name || !email || !password) {
-      showAlert('alert', 'Please fill in all required fields.', 'error');
-      return;
-    }
-    if (password !== password2) {
-      showAlert('alert', 'Passwords do not match.', 'error');
-      return;
-    }
-    if (password.length < 8) {
-      showAlert('alert', 'Password must be at least 8 characters.', 'error');
-      return;
-    }
-
-    const institution_name = document.getElementById('institution-name').value.trim();
-    const institution_type = document.getElementById('institution-type').value;
-    if (!institution_name || !institution_type) {
-      showAlert('alert', 'Please fill in institution details.', 'error');
-      return;
-    }
-
-    setLoading('register-btn', true, 'Creating account...');
-    hideAlert('alert');
-
-    try {
-      const res  = await fetch(`${API.AUTH}/auth/register/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, role: 'ISSUER', institution_name, institution_type }),
-      });
-      const data = await res.json();
-
-      if (res.ok) {
-        window.location.href = 'pending-approval.html';
-      } else {
-        const msg = data.email?.[0] || data.detail || 'Registration failed.';
-        showAlert('alert', msg, 'error');
-      }
-    } catch (e) {
-      showAlert('alert', 'Connection error. Please try again.', 'error');
-    } finally {
-      setLoading('register-btn', false, 'Create account');
-    }
-  }
-</script>
+<script src="../assets/js/pages/register.js"></script>
 </body>
 </html>

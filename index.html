@@ -6,18 +6,16 @@
   <title>Qentis — Universal Authenticity Verification</title>
   <link href="assets/css/index.css" rel="stylesheet"/>
 </head>
-<body style="background:var(--q-primary)">
+<body>
 
-<!-- Minimal navbar for landing -->
-<nav class="q-navbar" style="background:rgba(26,58,92,.95);border-bottom-color:rgba(255,255,255,.1)">
-  <span class="q-logo" style="color:#fff">Qen<span>tis</span></span>
-  <div style="margin-left:auto;display:flex;gap:12px">
-    <a href="pages/login.html" class="btn-q-outline" style="color:#fff;border-color:rgba(255,255,255,.3);padding:7px 16px;font-size:13px">Sign in</a>
-    <a href="pages/register.html" class="btn-q-accent" style="padding:7px 16px;font-size:13px;border-radius:var(--q-radius);display:inline-block">Get started</a>
+<nav class="q-navbar">
+  <span class="q-logo">Qen<span>tis</span></span>
+  <div class="q-navbar-actions">
+    <a href="pages/login.html" class="btn-q-outline">Sign in</a>
+    <a href="pages/register.html" class="btn-q-accent">Get started</a>
   </div>
 </nav>
 
-<!-- Hero -->
 <section class="hero">
   <div class="q-container">
     <div class="hero-grid">
@@ -27,12 +25,12 @@
         <p>Qentis is the universal platform for registering and verifying diplomas, medicines, official documents, jewellery, and banknotes — backed by an immutable blockchain record.</p>
 
         <div class="hero-actions">
-          <a href="pages/verifier/verify.html" class="btn-q-accent" style="font-size:15px;padding:12px 28px;border-radius:var(--q-radius)">Verify an item</a>
-          <a href="pages/register.html" class="btn-q-outline" style="font-size:15px;padding:11px 28px;border-radius:var(--q-radius);color:#fff;border-color:rgba(255,255,255,.4)">Register as issuer</a>
+          <a href="pages/verifier/verify.html" class="btn-q-accent">Verify an item</a>
+          <a href="pages/register.html" class="btn-q-outline">Register as issuer</a>
         </div>
 
         <div>
-          <p style="font-size:12px;opacity:.5;margin-bottom:10px;text-transform:uppercase;letter-spacing:.8px">Verified categories</p>
+          <p class="categories-label">Verified categories</p>
           <span class="domain-pill">🎓 Academic Certificates</span>
           <span class="domain-pill">💊 Pharmaceutical Products</span>
           <span class="domain-pill">📄 Official Documents</span>
@@ -41,58 +39,55 @@
       </div>
 
       <div class="hero-visual">
-        <div style="width:340px;height:340px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
-          <div style="width:80px;height:80px;background:rgba(0,200,150,.2);border:2px solid var(--q-accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px">✓</div>
-          <div style="text-align:center">
-            <div style="color:var(--q-accent);font-size:18px;font-weight:600">AUTHENTIC</div>
-            <div style="color:rgba(255,255,255,.5);font-size:13px;margin-top:4px">Verified on Ethereum blockchain</div>
+        <div class="verify-preview">
+          <div class="verify-preview-icon">✓</div>
+          <div class="verify-preview-text">
+            <div class="verify-preview-title">AUTHENTIC</div>
+            <div class="verify-preview-sub">Verified on Ethereum blockchain</div>
           </div>
-          <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 16px;font-family:var(--q-mono);font-size:11px;color:rgba(255,255,255,.5);width:260px;text-align:center">
-            0x4a3f...c821 · 3 seconds ago
-          </div>
+          <div class="verify-preview-hash">0x4a3f...c821 · 3 seconds ago</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- How it works -->
 <section class="how-section">
   <div class="q-container">
     <div class="how-header">
-      <h2 style="font-size:28px;color:var(--q-primary)">How Qentis works</h2>
-      <p style="color:var(--q-text-muted);font-size:15px">Three steps. One blockchain record. Zero forgery.</p>
+      <h2>How Qentis works</h2>
+      <p>Three steps. One blockchain record. Zero forgery.</p>
     </div>
     <div class="steps-grid">
       <div>
         <div class="q-card">
           <div class="step-num">1</div>
-          <h5 style="color:var(--q-primary)">Issuer registers</h5>
-          <p style="color:var(--q-text-muted);font-size:14px">An approved institution registers an item. Qentis generates a cryptographic hash and writes it permanently to the blockchain.</p>
+          <h5>Issuer registers</h5>
+          <p>An approved institution registers an item. Qentis generates a cryptographic hash and writes it permanently to the blockchain.</p>
         </div>
       </div>
       <div>
         <div class="q-card">
           <div class="step-num">2</div>
-          <h5 style="color:var(--q-primary)">QR code attached</h5>
-          <p style="color:var(--q-text-muted);font-size:14px">The issuer receives a QR code, serial number, and optional digital signature or watermark to attach to the item.</p>
+          <h5>QR code attached</h5>
+          <p>The issuer receives a QR code, serial number, and optional digital signature or watermark to attach to the item.</p>
         </div>
       </div>
       <div>
         <div class="q-card">
           <div class="step-num">3</div>
-          <h5 style="color:var(--q-primary)">Anyone verifies instantly</h5>
-          <p style="color:var(--q-text-muted);font-size:14px">Any verifier scans, types, or photographs the item. Qentis queries the blockchain and returns an AUTHENTIC result in under 3 seconds.</p>
+          <h5>Anyone verifies instantly</h5>
+          <p>Any verifier scans, types, or photographs the item. Qentis queries the blockchain and returns an AUTHENTIC result in under 3 seconds.</p>
         </div>
       </div>
     </div>
     <div class="how-cta">
-      <a href="pages/verifier/verify.html" class="btn-q-primary" style="font-size:15px;padding:12px 32px">Try verification now — no account needed</a>
+      <a href="pages/verifier/verify.html" class="btn-q-primary">Try verification now — no account needed</a>
     </div>
   </div>
 </section>
 
-<footer style="background:var(--q-primary);color:rgba(255,255,255,.5);text-align:center;padding:24px;font-size:13px">
+<footer class="q-footer">
   Qentis © 2026 · Built at ICT University Cameroon · SEN3244 Software Architecture
 </footer>
 

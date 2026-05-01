@@ -151,3 +151,8 @@ a:hover { color: var(--q-accent-dark); }
   animation: spin .7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Auth page extras ── */
+.q-auth-footer-text { text-align: center; font-size: 13px; color: var(--q-text-muted); margin-top: 20px; }
+.q-auth-link        { text-align: center; margin-top: 12px; }
+.q-link-muted       { font-size: 13px; color: var(--q-text-muted); }

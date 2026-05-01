@@ -81,3 +81,11 @@ a:hover { color: var(--q-accent-dark); }
   text-decoration: none;
 }
 .btn-q-outline:hover { border-color: var(--q-accent); color: var(--q-accent); }
+
+/* ── Pending page layout ── */
+.q-auth-page--offset  { margin-top: 60px; }
+.q-auth-card--centered { text-align: center; }
+.q-pending-icon { font-size: 48px; margin-bottom: 16px; }
+.q-pending-desc { color: var(--q-text-muted); font-size: 15px; margin-top: 12px; }
+.q-pending-note { color: var(--q-text-muted); font-size: 14px; }
+.q-pending-btn  { display: inline-block; margin-top: 20px; }
