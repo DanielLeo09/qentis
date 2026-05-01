@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  --q-primary-light: #C9992A;
+  --q-accent:        #F0C040;
+  --q-accent-dark:   #C9992A;
+  --q-bg:            #0D0B15;
+  --q-surface:       #12101A;
+  --q-border:        rgba(240,192,64,.14);
+  --q-text:          #F1EEF9;
+  --q-text-muted:    #8A8399;
+  --q-radius:        10px;
+  --q-shadow:        0 2px 16px rgba(0,0,0,.45);
+  --q-font:          'Sora', sans-serif;
+  --q-mono:          'IBM Plex Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: var(--q-font);
+  background: var(--q-bg);
+  color: var(--q-text);
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+a { color: var(--q-accent); text-decoration: none; }
+a:hover { color: var(--q-accent-dark); }
+h5 { font-weight: 600; margin: 0 0 4px; }
+
+/* ── Navbar ── */
+.q-navbar {
+  background: var(--q-surface);
+  border-bottom: 1px solid var(--q-border);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  box-shadow: var(--q-shadow);
+}
+
+.q-logo { font-size: 20px; font-weight: 600; color: var(--q-text); letter-spacing: -0.5px; }
+.q-logo span { color: var(--q-accent); }
+
+/* ── Buttons ── */
+.btn-q-primary {
+  display: inline-block;
+  background: var(--q-accent);
+  color: #08060E;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--q-radius);
+  font-family: var(--q-font);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-q-primary:hover { background: var(--q-accent-dark); color: #08060E; }
+
+.btn-q-outline {
+  display: inline-block;
+  background: transparent;
+  color: var(--q-text);
+  border: 1.5px solid var(--q-border);
+  padding: 9px 20px;
+  border-radius: var(--q-radius);
+  font-family: var(--q-font);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn-q-outline:hover { border-color: var(--q-accent); color: var(--q-accent); }
+
+.mt-3 { margin-top: 1rem; }
+
+/* ── Card ── */
+.q-card {
+  background: var(--q-surface);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius);
+  padding: 24px;
+  box-shadow: var(--q-shadow);
+}
+
+/* ── Method grid (replaces Bootstrap row/col) ── */
+.q-method-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.method-card {
+  cursor: pointer;
+  border: 1.5px solid var(--q-border);
+  border-radius: var(--q-radius);
+  padding: 16px;
+  text-align: center;
+  transition: all .15s;
+  background: transparent;
+}
+.method-card:hover  { border-color: var(--q-primary-light); background: rgba(240,192,64,.1); }
+.method-card.active { border-color: var(--q-text);          background: rgba(240,192,64,.1); }
+
+.method-icon  { font-size: 28px; margin-bottom: 8px; }
+.method-label { font-size: 13px; font-weight: 500; color: var(--q-text); }
+
+/* ── Verify panels ── */
+.verify-panel        { display: none; }
+.verify-panel.active { display: block; }
+
+/* ── Forms ── */
+.q-form-group { margin-bottom: 18px; }
+
+.q-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--q-text);
+  margin-bottom: 6px;
+}
+
+.q-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--q-border);
+  border-radius: var(--q-radius);
+  font-family: var(--q-font);
+  font-size: 14px;
+  color: var(--q-text);
+  background: rgba(255,255,255,.04);
+  transition: border-color .15s;
+  outline: none;
+}
+.q-input:focus { border-color: var(--q-accent); box-shadow: 0 0 0 3px rgba(240,192,64,.1); }
+.q-input::placeholder { color: var(--q-text-muted); }
+
+/* ── Upload zone ── */
+.q-upload-zone {
+  border: 2px dashed var(--q-border);
+  border-radius: var(--q-radius);
+  padding: 36px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .15s;
+  background: rgba(255,255,255,.02);
+}
+.q-upload-zone:hover { border-color: var(--q-accent); background: rgba(240,192,64,.05); }
+.q-upload-zone p { color: var(--q-text-muted); font-size: 14px; margin: 8px 0 0; }
+
+/* ── Camera feed ── */
+#camera-feed { width: 100%; max-width: 400px; border-radius: var(--q-radius); }
+
+/* ── Result cards ── */
+.q-result-authentic {
+  background: rgba(52,211,153,.07);
+  border: 1.5px solid rgba(52,211,153,.3);
+  border-radius: var(--q-radius);
+  padding: 24px;
+}
+.q-result-not-authentic {
+  background: rgba(248,113,113,.07);
+  border: 1.5px solid rgba(248,113,113,.3);
+  border-radius: var(--q-radius);
+  padding: 24px;
+}
+.q-result-unverifiable {
+  background: rgba(255,255,255,.03);
+  border: 1.5px solid var(--q-border);
+  border-radius: var(--q-radius);
+  padding: 24px;
+}
+.q-result-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.q-result-authentic     .q-result-title { color: #34D399; }
+.q-result-not-authentic .q-result-title { color: #F87171; }
+.q-result-unverifiable  .q-result-title { color: var(--q-text-muted); }
+
+/* ── Hash & blockchain badge ── */
+.q-hash {
+  font-family: var(--q-mono);
+  font-size: 12px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--q-border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  word-break: break-all;
+  color: var(--q-accent);
+}
+
+.q-blockchain-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(52,211,153,.1);
+  border: 1px solid rgba(52,211,153,.25);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: #34D399;
+  font-weight: 500;
+}
+
+/* ── Spinner ── */
+.q-spinner {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border: 2px solid var(--q-border);
+  border-top-color: var(--q-accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .q-method-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 400px) {
+  .q-method-grid { grid-template-columns: repeat(2, 1fr); }
+}

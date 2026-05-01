@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Issuer Dashboard — Qentis</title>  <link href="../../assets/css/main.css" rel="stylesheet"/>
+  <title>Issuer Dashboard — Qentis</title>  <link href="../../assets/css/issuer/dashboard.css" rel="stylesheet"/>
 </head>
 <body>
 <script src="../../assets/js/api.js"></script>
@@ -21,34 +21,26 @@
   </div>
 
   <!-- Stat cards -->
-  <div class="row g-3 mb-4">
-    <div class="col-sm-6 col-lg-3">
-      <div class="q-stat">
-        <div class="q-stat-icon" style="background:rgba(240,192,64,.1)">📄</div>
-        <div class="q-stat-value" id="stat-total">—</div>
-        <div class="q-stat-label">Total items registered</div>
-      </div>
+  <div class="q-stat-grid">
+    <div class="q-stat">
+      <div class="q-stat-icon" style="background:rgba(240,192,64,.1)">📄</div>
+      <div class="q-stat-value" id="stat-total">—</div>
+      <div class="q-stat-label">Total items registered</div>
     </div>
-    <div class="col-sm-6 col-lg-3">
-      <div class="q-stat">
-        <div class="q-stat-icon" style="background:#D1FAE5">✓</div>
-        <div class="q-stat-value" id="stat-verified">—</div>
-        <div class="q-stat-label">Verified this month</div>
-      </div>
+    <div class="q-stat">
+      <div class="q-stat-icon" style="background:#D1FAE5">✓</div>
+      <div class="q-stat-value" id="stat-verified">—</div>
+      <div class="q-stat-label">Verified this month</div>
     </div>
-    <div class="col-sm-6 col-lg-3">
-      <div class="q-stat">
-        <div class="q-stat-icon" style="background:#FEE2E2">⚠</div>
-        <div class="q-stat-value" id="stat-alerts">—</div>
-        <div class="q-stat-label">Fraud alerts</div>
-      </div>
+    <div class="q-stat">
+      <div class="q-stat-icon" style="background:#FEE2E2">⚠</div>
+      <div class="q-stat-value" id="stat-alerts">—</div>
+      <div class="q-stat-label">Fraud alerts</div>
     </div>
-    <div class="col-sm-6 col-lg-3">
-      <div class="q-stat">
-        <div class="q-stat-icon" style="background:#F0FDF4">⛓</div>
-        <div class="q-stat-value" id="stat-blockchain">—</div>
-        <div class="q-stat-label">Blockchain records</div>
-      </div>
+    <div class="q-stat">
+      <div class="q-stat-icon" style="background:#F0FDF4">⛓</div>
+      <div class="q-stat-value" id="stat-blockchain">—</div>
+      <div class="q-stat-label">Blockchain records</div>
     </div>
   </div>
 

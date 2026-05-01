@@ -3,33 +3,13 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Verify an Item — Qentis</title>  <link href="../../assets/css/main.css" rel="stylesheet"/>
-  <style>
-    .method-card {
-      cursor: pointer;
-      border: 1.5px solid var(--q-border);
-      border-radius: var(--q-radius);
-      padding: 16px;
-      text-align: center;
-      transition: all .15s;
-    }
-    .method-card:hover { border-color: var(--q-primary-light); background: rgba(240,192,64,.1); }
-    .method-card.active { border-color: var(--q-text); background: rgba(240,192,64,.1); }
-    .method-icon { font-size: 28px; margin-bottom: 8px; }
-    .method-label { font-size: 13px; font-weight: 500; color: var(--q-text); }
-    .verify-panel { display: none; }
-    .verify-panel.active { display: block; }
-    #camera-feed { width: 100%; max-width: 400px; border-radius: var(--q-radius); }
-  </style>
+  <title>Verify an Item — Qentis</title>  <link href="../../assets/css/verifier/verify.css" rel="stylesheet"/>
 </head>
 <body>
 
 <!-- Simple top navbar (no sidebar — verifiers need no account) -->
 <nav class="q-navbar">
-  <a href="../../../index.html" class="q-logo">Qen<span>tis</span></a>
-  <div style="margin-left:auto;display:flex;gap:12px">
-    <a href="../login.html" style="font-size:13px;color:var(--q-text-muted)">Sign in</a>
-  </div>
+  <a href="../../index.html" class="q-logo">Qen<span>tis</span></a>
 </nav>
 
 <div style="margin-top:60px;padding:32px 24px;max-width:760px;margin-left:auto;margin-right:auto">
@@ -43,12 +23,12 @@
   <div id="result-area" style="margin-bottom:28px"></div>
 
   <!-- Method selector -->
-  <div class="row g-2 mb-4">
-    <div class="col"><div class="method-card active" id="m-qr" onclick="selectMethod('qr')"><div class="method-icon">📷</div><div class="method-label">QR Code</div></div></div>
-    <div class="col"><div class="method-card" id="m-serial" onclick="selectMethod('serial')"><div class="method-icon">🔢</div><div class="method-label">Serial No.</div></div></div>
-    <div class="col"><div class="method-card" id="m-signature" onclick="selectMethod('signature')"><div class="method-icon">📎</div><div class="method-label">Signature</div></div></div>
-    <div class="col"><div class="method-card" id="m-ocr" onclick="selectMethod('ocr')"><div class="method-icon">🔍</div><div class="method-label">OCR Photo</div></div></div>
-    <div class="col"><div class="method-card" id="m-watermark" onclick="selectMethod('watermark')"><div class="method-icon">💧</div><div class="method-label">Watermark</div></div></div>
+  <div class="q-method-grid">
+    <div class="method-card active" id="m-qr" onclick="selectMethod('qr')"><div class="method-icon">📷</div><div class="method-label">QR Code</div></div>
+    <div class="method-card" id="m-serial" onclick="selectMethod('serial')"><div class="method-icon">🔢</div><div class="method-label">Serial No.</div></div>
+    <div class="method-card" id="m-signature" onclick="selectMethod('signature')"><div class="method-icon">📎</div><div class="method-label">Signature</div></div>
+    <div class="method-card" id="m-ocr" onclick="selectMethod('ocr')"><div class="method-icon">🔍</div><div class="method-label">OCR Photo</div></div>
+    <div class="method-card" id="m-watermark" onclick="selectMethod('watermark')"><div class="method-icon">💧</div><div class="method-label">Watermark</div></div>
   </div>
 
   <div class="q-card">
