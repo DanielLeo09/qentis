@@ -1,11 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Verify an Item — Qentis</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="../../assets/css/main.css" rel="stylesheet"/>
+  <title>Verify an Item — Qentis</title>  <link href="../../assets/css/main.css" rel="stylesheet"/>
   <style>
     .method-card {
       cursor: pointer;
@@ -15,10 +13,10 @@
       text-align: center;
       transition: all .15s;
     }
-    .method-card:hover { border-color: var(--q-primary-light); background: #EEF4FF; }
-    .method-card.active { border-color: var(--q-primary); background: #EEF4FF; }
+    .method-card:hover { border-color: var(--q-primary-light); background: rgba(240,192,64,.1); }
+    .method-card.active { border-color: var(--q-text); background: rgba(240,192,64,.1); }
     .method-icon { font-size: 28px; margin-bottom: 8px; }
-    .method-label { font-size: 13px; font-weight: 500; color: var(--q-primary); }
+    .method-label { font-size: 13px; font-weight: 500; color: var(--q-text); }
     .verify-panel { display: none; }
     .verify-panel.active { display: block; }
     #camera-feed { width: 100%; max-width: 400px; border-radius: var(--q-radius); }
@@ -28,7 +26,7 @@
 
 <!-- Simple top navbar (no sidebar — verifiers need no account) -->
 <nav class="q-navbar">
-  <a href="../../index.html" class="q-logo">Qen<span>tis</span></a>
+  <a href="../../../index.html" class="q-logo">Qen<span>tis</span></a>
   <div style="margin-left:auto;display:flex;gap:12px">
     <a href="../login.html" style="font-size:13px;color:var(--q-text-muted)">Sign in</a>
   </div>
@@ -37,7 +35,7 @@
 <div style="margin-top:60px;padding:32px 24px;max-width:760px;margin-left:auto;margin-right:auto">
 
   <div style="text-align:center;margin-bottom:32px">
-    <h1 style="font-size:26px;color:var(--q-primary)">Verify an item</h1>
+    <h1 style="font-size:26px;color:var(--q-text)">Verify an item</h1>
     <p style="color:var(--q-text-muted);font-size:15px">No account required. Choose a verification method below.</p>
   </div>
 
@@ -57,7 +55,7 @@
 
     <!-- QR Code panel -->
     <div class="verify-panel active" id="panel-qr">
-      <h5 style="color:var(--q-primary);margin-bottom:4px">Scan QR code</h5>
+      <h5 style="color:var(--q-text);margin-bottom:4px">Scan QR code</h5>
       <p style="color:var(--q-text-muted);font-size:14px;margin-bottom:20px">Point your camera at the QR code on the item.</p>
       <div style="text-align:center">
         <video id="camera-feed" autoplay playsinline></video>
@@ -73,7 +71,7 @@
 
     <!-- Serial number panel -->
     <div class="verify-panel" id="panel-serial">
-      <h5 style="color:var(--q-primary);margin-bottom:4px">Enter serial number</h5>
+      <h5 style="color:var(--q-text);margin-bottom:4px">Enter serial number</h5>
       <p style="color:var(--q-text-muted);font-size:14px;margin-bottom:20px">Type the serial number printed on the item.</p>
       <div class="q-form-group">
         <label class="q-label">Serial number</label>
@@ -84,7 +82,7 @@
 
     <!-- Digital signature panel -->
     <div class="verify-panel" id="panel-signature">
-      <h5 style="color:var(--q-primary);margin-bottom:4px">Verify digital signature</h5>
+      <h5 style="color:var(--q-text);margin-bottom:4px">Verify digital signature</h5>
       <p style="color:var(--q-text-muted);font-size:14px;margin-bottom:20px">Upload the original PDF certificate file.</p>
       <div class="q-upload-zone" onclick="document.getElementById('sig-file').click()">
         <div style="font-size:28px">📎</div>
@@ -98,7 +96,7 @@
 
     <!-- OCR Photo panel -->
     <div class="verify-panel" id="panel-ocr">
-      <h5 style="color:var(--q-primary);margin-bottom:4px">OCR photo scan</h5>
+      <h5 style="color:var(--q-text);margin-bottom:4px">OCR photo scan</h5>
       <p style="color:var(--q-text-muted);font-size:14px;margin-bottom:20px">Photograph a banknote. Qentis reads the serial number automatically.</p>
       <div class="q-upload-zone" onclick="document.getElementById('ocr-file').click()">
         <div style="font-size:28px">🔍</div>
@@ -112,7 +110,7 @@
 
     <!-- Watermark panel -->
     <div class="verify-panel" id="panel-watermark">
-      <h5 style="color:var(--q-primary);margin-bottom:4px">Watermark detection</h5>
+      <h5 style="color:var(--q-text);margin-bottom:4px">Watermark detection</h5>
       <p style="color:var(--q-text-muted);font-size:14px;margin-bottom:20px">Upload a photograph of the document. Qentis extracts the hidden watermark.</p>
       <div class="q-upload-zone" onclick="document.getElementById('wm-file').click()">
         <div style="font-size:28px">💧</div>
