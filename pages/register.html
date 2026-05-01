@@ -13,27 +13,10 @@
       <a href="../../index.html" class="q-logo">Qen<span>tis</span></a>
     </div>
 
-    <h1 class="q-auth-title">Create account</h1>
-    <p class="q-auth-subtitle">Join Qentis as an issuer or item owner</p>
+    <h1 class="q-auth-title">Register as issuer</h1>
+    <p class="q-auth-subtitle">Create an institution account to register and authenticate items</p>
 
     <div id="alert" class="q-alert"></div>
-
-    <!-- Role selector -->
-    <div class="q-form-group">
-      <label class="q-label">I am registering as</label>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div id="role-issuer" class="role-option active" onclick="selectRole('ISSUER')">
-          <div style="font-size:20px;margin-bottom:6px">🏢</div>
-          <div style="font-size:13px;font-weight:500;color:var(--q-text)">Issuer</div>
-          <div style="font-size:11px;color:var(--q-text-muted)">University, hospital, bank...</div>
-        </div>
-        <div id="role-owner" class="role-option" onclick="selectRole('ITEM_OWNER')">
-          <div style="font-size:20px;margin-bottom:6px">👤</div>
-          <div style="font-size:13px;font-weight:500;color:var(--q-text)">Item Owner</div>
-          <div style="font-size:11px;color:var(--q-text-muted)">Student, patient, citizen...</div>
-        </div>
-      </div>
-    </div>
 
     <div class="q-form-group">
       <label class="q-label" for="name">Full name</label>
@@ -45,7 +28,6 @@
       <input type="email" id="email" class="q-input" placeholder="you@example.com"/>
     </div>
 
-    <!-- Issuer-only fields -->
     <div id="issuer-fields">
       <div class="q-form-group">
         <label class="q-label" for="institution-name">Institution name</label>
@@ -87,33 +69,8 @@
   </div>
 </div>
 
-<style>
-  .role-option {
-    border: 1.5px solid var(--q-border);
-    border-radius: var(--q-radius);
-    padding: 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: all .15s;
-  }
-  .role-option:hover { border-color: var(--q-accent); }
-  .role-option.active {
-    border-color: var(--q-accent);
-    background: rgba(240,192,64,.1);
-  }
-</style>
-
 <script src="../assets/js/api.js"></script>
 <script>
-  let selectedRole = 'ISSUER';
-
-  function selectRole(role) {
-    selectedRole = role;
-    document.getElementById('role-issuer').classList.toggle('active', role === 'ISSUER');
-    document.getElementById('role-owner').classList.toggle('active', role === 'ITEM_OWNER');
-    document.getElementById('issuer-fields').style.display = role === 'ISSUER' ? 'block' : 'none';
-  }
-
   async function handleRegister() {
     const name      = document.getElementById('name').value.trim();
     const email     = document.getElementById('email').value.trim();
@@ -133,15 +90,11 @@
       return;
     }
 
-    const body = { name, email, password, role: selectedRole };
-
-    if (selectedRole === 'ISSUER') {
-      body.institution_name = document.getElementById('institution-name').value.trim();
-      body.institution_type = document.getElementById('institution-type').value;
-      if (!body.institution_name || !body.institution_type) {
-        showAlert('alert', 'Please fill in institution details.', 'error');
-        return;
-      }
+    const institution_name = document.getElementById('institution-name').value.trim();
+    const institution_type = document.getElementById('institution-type').value;
+    if (!institution_name || !institution_type) {
+      showAlert('alert', 'Please fill in institution details.', 'error');
+      return;
     }
 
     setLoading('register-btn', true, 'Creating account...');
@@ -151,18 +104,12 @@
       const res  = await fetch(`${API.AUTH}/auth/register/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ name, email, password, role: 'ISSUER', institution_name, institution_type }),
       });
       const data = await res.json();
 
       if (res.ok) {
-        if (selectedRole === 'ISSUER') {
-          window.location.href = 'pending-approval.html';
-        } else {
-          Auth.setToken(data.access);
-          Auth.setUser(data.user);
-          window.location.href = '../pages/owner/dashboard.html';
-        }
+        window.location.href = 'pending-approval.html';
       } else {
         const msg = data.email?.[0] || data.detail || 'Registration failed.';
         showAlert('alert', msg, 'error');
