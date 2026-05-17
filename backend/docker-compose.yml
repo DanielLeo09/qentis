@@ -1,9 +1,63 @@
-# docker-compose.yml — Qentis full local stack
-# See plan.md Section 13 for the complete configuration
 version: '3.9'
 
-services: {}
+services:
+
+  # ── DATABASES ──────────────────────────────────
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: qentis
+      POSTGRES_PASSWORD: qentis2026
+      POSTGRES_DB: qentis_main
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - qentis_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U qentis -d qentis_main"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - qentis_network
+
+  # ── SERVICES ───────────────────────────────────
+  institution:
+    build: ./services/institution
+    container_name: institution
+    ports:
+      - "8002:8002"
+    environment:
+      - SECRET_KEY=qentis-institution-secret-key-2026
+      - DEBUG=True
+      - DB_HOST=postgres
+      - REDIS_URL=redis://redis:6379/1
+      - AUTH_SERVICE_URL=http://user-auth:8001
+      - ALLOWED_HOSTS=*
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - qentis_network
+    volumes:
+      - ./services/institution:/app
+    restart: unless-stopped
+
+networks:
+  qentis_network:
+    driver: bridge
 
 volumes:
   postgres_data:
-  media_volume:
