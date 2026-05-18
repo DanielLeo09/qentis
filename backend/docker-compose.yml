@@ -105,7 +105,37 @@ services:
     volumes:
       - ./services/item-registration:/app
     restart: unless-stopped
-
+  
+  verification:
+    build: ./services/verification
+    container_name: verification
+    ports:
+      - "8006:8006"
+    environment:
+      - SECRET_KEY=qentis-verification-secret-key-2026
+      - DEBUG=True
+      - DB_HOST=postgres
+      - REDIS_URL=redis://redis:6379/4
+      - BLOCKCHAIN_SERVICE_URL=http://blockchain:8004
+      - OUTPUT_SERVICE_URL=http://auth-output:8005
+      - EMAIL_HOST=smtp.mailtrap.io
+      - EMAIL_PORT=2525
+      - EMAIL_HOST_USER=your_mailtrap_user
+      - EMAIL_HOST_PASSWORD=your_mailtrap_password
+      - FRAUD_THRESHOLD=50
+      - CACHE_TTL=300
+      - ALLOWED_HOSTS=*
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - qentis_network
+    volumes:
+      - ./services/verification:/app
+    restart: unless-stopped
+  
 networks:
   qentis_network:
     driver: bridge
