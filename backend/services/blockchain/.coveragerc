@@ -1,0 +1,9 @@
+[run]
+source = blockchain_app
+omit =
+    blockchain_app/QentisRegistry.sol
+    blockchain_app/migrations/*
+    blockchain_app/tests.py
+
+[report]
+show_missing = True

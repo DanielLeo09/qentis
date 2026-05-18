@@ -31,6 +31,20 @@ services:
     networks:
       - qentis_network
 
+  ganache:
+    image: trufflesuite/ganache:latest
+    container_name: ganache
+    ports:
+      - "8545:8545"
+    command: >
+      --deterministic
+      --accounts 10
+      --host 0.0.0.0
+      --port 8545
+      --networkId 1337
+    networks:
+      - qentis_network
+
   # ── SERVICES ───────────────────────────────────
   user-auth:
     build: ./services/user-auth
@@ -78,7 +92,7 @@ services:
     volumes:
       - ./services/institution:/app
     restart: unless-stopped
-    
+
   item-registration:
     build: ./services/item-registration
     container_name: item-registration
@@ -105,7 +119,31 @@ services:
     volumes:
       - ./services/item-registration:/app
     restart: unless-stopped
-  
+
+  blockchain:
+    build: ./services/blockchain
+    container_name: blockchain
+    ports:
+      - "8004:8004"
+    environment:
+      - SECRET_KEY=qentis-blockchain-secret-key-2026
+      - DEBUG=True
+      - DB_HOST=postgres
+      - ALLOWED_HOSTS=*
+      - GANACHE_URL=http://ganache:8545
+      - CONTRACT_ADDRESS=
+      - DEPLOYER_PRIVATE_KEY=
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ganache:
+        condition: service_started
+    networks:
+      - qentis_network
+    volumes:
+      - ./services/blockchain:/app
+    restart: unless-stopped
+
   verification:
     build: ./services/verification
     container_name: verification
@@ -135,7 +173,7 @@ services:
     volumes:
       - ./services/verification:/app
     restart: unless-stopped
-  
+
 networks:
   qentis_network:
     driver: bridge
