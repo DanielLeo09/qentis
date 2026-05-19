@@ -1,4 +1,5 @@
 import uuid
+import hashlib
 import requests
 from django.utils import timezone
 from django.conf import settings
@@ -21,30 +22,42 @@ from .serializers import (
 )
 
 
-def call_blockchain_service(item_id, category, hash_fields):
+def generate_hash(field_values):
+    """Generate SHA-256 hash from concatenated field values."""
+    return hashlib.sha256(field_values.encode()).hexdigest()
+
+
+def call_blockchain_service(item_id, category, hash_fields, issuer_id=None, issuer_name=None):
     """
     Call Blockchain Service to store hash on Ethereum.
-    SPRINT 1: Returns mock response.
-    SPRINT 2: Replace with real HTTP call.
+    Generates SHA-256 hash here and sends it to Blockchain Service.
+    Falls back to mock if service not available.
     """
+    item_hash = generate_hash(hash_fields)
+
     try:
         response = requests.post(
             f"{settings.BLOCKCHAIN_SERVICE_URL}/api/blockchain/store/",
             json={
-                'item_id': str(item_id),
-                'category': category,
-                'field_values': hash_fields,
+                'item_hash':   item_hash,
+                'category':    category,
+                'issuer_id':   str(issuer_id) if issuer_id else 'unknown',
+                'issuer_name': issuer_name or 'Unknown Institution',
             },
             timeout=10
         )
         if response.status_code == 201:
-            return response.json()
+            data = response.json()
+            return {
+                'hash': item_hash,
+                'transaction_hash': data.get('tx_hash', ''),
+            }
     except Exception:
         pass
 
-    # MOCK RESPONSE — Sprint 1 only
+    # MOCK RESPONSE — fallback only
     return {
-        'hash': f'mock-hash-{str(item_id)[:8]}',
+        'hash': item_hash,
         'transaction_hash': f'mock-tx-{str(item_id)[:8]}',
     }
 
@@ -172,9 +185,11 @@ def register_item(request):
     # Get hash fields from detail model
     hash_fields = detail.get_hash_fields()
 
-    # Call Blockchain Service (mock in Sprint 1)
+    # Call Blockchain Service
     blockchain_response = call_blockchain_service(
-        item.id, category, hash_fields
+        item.id, category, hash_fields,
+        issuer_id=issuer_id,
+        issuer_name=request.data.get('institution_name', 'Unknown Institution')
     )
 
     # Call Auth Output Service (mock in Sprint 1)

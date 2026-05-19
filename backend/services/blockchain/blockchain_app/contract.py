@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 from django.conf import settings
-from solcx import compile_source, install_solc
+from solcx import compile_source, set_solc_version
 
 from .web3_client import get_web3, get_deployer_account
 
@@ -18,7 +18,7 @@ def compile_contract():
     bytecode — the machine code deployed to the blockchain
     ABI      — the interface that tells web3 how to call the contract functions
     """
-    install_solc('0.8.0')
+    set_solc_version('0.8.0')
 
     source = CONTRACT_PATH.read_text()
 
@@ -45,8 +45,8 @@ def deploy_contract():
     deployer = get_deployer_account(w3)
     abi, bytecode = compile_contract()
 
-    Contract  = w3.eth.contract(abi=abi, bytecode=bytecode)
-    tx_hash   = Contract.constructor().transact({'from': deployer})
+    Contract   = w3.eth.contract(abi=abi, bytecode=bytecode)
+    tx_hash    = Contract.constructor().transact({'from': deployer})
     tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
     return tx_receipt.contractAddress

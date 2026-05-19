@@ -37,13 +37,13 @@ services:
     ports:
       - "8545:8545"
     command: >
-      --deterministic
-      --accounts 10
       --host 0.0.0.0
-      --port 8545
+      --accounts 10
+      --mnemonic "qentis blockchain development wallet seed phrase"
       --networkId 1337
     networks:
       - qentis_network
+    restart: unless-stopped
 
   # ── SERVICES ───────────────────────────────────
   user-auth:
@@ -131,8 +131,8 @@ services:
       - DB_HOST=postgres
       - ALLOWED_HOSTS=*
       - GANACHE_URL=http://ganache:8545
-      - CONTRACT_ADDRESS=
-      - DEPLOYER_PRIVATE_KEY=
+      - CONTRACT_ADDRESS=0xa39F71eD226f35F7b68eA5874Df3358970093221
+      - DEPLOYER_PRIVATE_KEY=0xd980fc1392d2fddce18279a75775416c9f4f6070bddd38d2d1f496e34193c05f
     depends_on:
       postgres:
         condition: service_healthy
