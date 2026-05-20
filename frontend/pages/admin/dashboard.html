@@ -1,1 +1,67 @@
-﻿<!DOCTYPE html><html lang="en"><head>  <meta charset="UTF-8"/>  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  <title>Dashboard — Qentis</title>  <link href="../../assets/css/admin/dashboard.css" rel="stylesheet"/></head><body data-role="ADMIN" data-sidebar="admin" data-page="dashboard"><script src="../../assets/js/api.js"></script><script src="../../assets/js/layout.js"></script><script src="../../assets/js/init.js"></script><main class="q-main">  <div class="q-page-header"><h1>Dashboard</h1><p>Full implementation coming in Week 2/3</p></div>  <div class="q-card"><p class="stub-note">🚧 Stub page — connect to backend API</p></div></main></body></html>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Qentis Admin</title>
+  <link href="../../assets/css/admin/dashboard.css" rel="stylesheet"/>
+</head>
+<body data-role="ADMIN" data-sidebar="admin" data-page="dashboard">
+
+<script src="../../assets/js/api/config.js"></script>
+<script src="../../assets/js/api/auth.js"></script>
+<script src="../../assets/js/layout.js"></script>
+<script src="../../assets/js/init.js"></script>
+
+<main class="q-main">
+
+  <div class="q-page-header">
+    <h1>Dashboard</h1>
+    <p>Platform overview and key metrics</p>
+  </div>
+
+  <div class="q-stats-grid">
+    <div class="q-stat-card">
+      <div class="q-stat-label">Total Institutions</div>
+      <div class="q-stat-value" id="stat-institutions">—</div>
+    </div>
+    <div class="q-stat-card">
+      <div class="q-stat-label">Pending Approvals</div>
+      <div class="q-stat-value" id="stat-pending">—</div>
+    </div>
+    <div class="q-stat-card">
+      <div class="q-stat-label">Total Items Registered</div>
+      <div class="q-stat-value" id="stat-items">—</div>
+    </div>
+    <div class="q-stat-card">
+      <div class="q-stat-label">Verifications Today</div>
+      <div class="q-stat-value" id="stat-verifications">—</div>
+    </div>
+    <div class="q-stat-card">
+      <div class="q-stat-label">Open Fraud Flags</div>
+      <div class="q-stat-value" id="stat-flags">—</div>
+    </div>
+  </div>
+
+  <div class="q-card" style="margin-top:24px">
+    <div class="q-card-header">
+      <h2>Pending Issuer Applications</h2>
+      <a href="pending-issuers.html" class="btn-q-outline">View All</a>
+    </div>
+    <div id="pending-list"><p class="q-loading">Loading...</p></div>
+  </div>
+
+  <div class="q-card" style="margin-top:24px">
+    <div class="q-card-header">
+      <h2>Recent Fraud Flags</h2>
+      <a href="fraud-alerts.html" class="btn-q-outline">View All</a>
+    </div>
+    <div id="flags-list"><p class="q-loading">Loading...</p></div>
+  </div>
+
+</main>
+
+<script src="../../assets/js/admin/dashboard.js"></script>
+
+</body>
+</html>
