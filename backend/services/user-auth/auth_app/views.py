@@ -7,6 +7,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 from .models import User, Issuer, Verifier, Administrator
 from .serializers import (
@@ -18,23 +20,21 @@ from .serializers import (
 
 
 def get_tokens_for_user(user):
-    """
-    Generate JWT access and refresh tokens for a user.
-    Also adds custom claims to the token payload.
-    """
     refresh = RefreshToken.for_user(user)
-
-    # Add custom claims to token payload
     refresh['user_id'] = str(user.id)
     refresh['email'] = user.email
     refresh['role'] = user.role
-
     return {
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
 
 
+@swagger_auto_schema(
+    method='post',
+    request_body=RegisterSerializer,
+    responses={201: 'Account created successfully'}
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
@@ -44,11 +44,9 @@ def register(request):
     No authentication required.
     """
     serializer = RegisterSerializer(data=request.data)
-
     if serializer.is_valid():
         user = serializer.save()
         tokens = get_tokens_for_user(user)
-
         return Response(
             {
                 'message': 'Account created successfully.',
@@ -57,17 +55,27 @@ def register(request):
             },
             status=status.HTTP_201_CREATED
         )
-
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@swagger_auto_schema(
+    method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=['email', 'password'],
+        properties={
+            'email': openapi.Schema(type=openapi.TYPE_STRING),
+            'password': openapi.Schema(type=openapi.TYPE_STRING),
+        }
+    ),
+    responses={200: 'Login successful'}
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login(request):
     """
     Login with email and password.
     POST /api/auth/login/
-    Returns JWT access and refresh tokens.
     No authentication required.
     """
     email = request.data.get('email')
@@ -79,7 +87,6 @@ def login(request):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    # Authenticate user
     user = authenticate(request, username=email.lower(), password=password)
 
     if not user:
@@ -95,7 +102,6 @@ def login(request):
         )
 
     tokens = get_tokens_for_user(user)
-
     return Response(
         {
             'message': 'Login successful.',
@@ -106,6 +112,17 @@ def login(request):
     )
 
 
+@swagger_auto_schema(
+    method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=['refresh_token'],
+        properties={
+            'refresh_token': openapi.Schema(type=openapi.TYPE_STRING),
+        }
+    ),
+    responses={200: 'Logged out successfully'}
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout(request):
@@ -136,13 +153,24 @@ def logout(request):
         )
 
 
+@swagger_auto_schema(
+    method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=['refresh_token'],
+        properties={
+            'refresh_token': openapi.Schema(type=openapi.TYPE_STRING),
+        }
+    ),
+    responses={200: 'New access token returned'}
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def token_refresh(request):
     """
     Get a new access token using refresh token.
     POST /api/auth/token/refresh/
-    No authentication required — send refresh token in body.
+    No authentication required.
     """
     refresh_token = request.data.get('refresh_token')
 
@@ -155,9 +183,7 @@ def token_refresh(request):
     try:
         token = RefreshToken(refresh_token)
         return Response(
-            {
-                'access': str(token.access_token),
-            },
+            {'access': str(token.access_token)},
             status=status.HTTP_200_OK
         )
     except TokenError:
@@ -179,7 +205,6 @@ def profile(request):
     serializer = UserSerializer(user)
     data = serializer.data
 
-    # Add role-specific profile data
     if user.role == User.Role.ISSUER and hasattr(user, 'issuer_profile'):
         issuer = user.issuer_profile
         data['issuer_profile'] = {
@@ -202,6 +227,11 @@ def profile(request):
     return Response(data, status=status.HTTP_200_OK)
 
 
+@swagger_auto_schema(
+    method='put',
+    request_body=UpdateProfileSerializer,
+    responses={200: 'Profile updated successfully'}
+)
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_profile(request):
@@ -226,10 +256,14 @@ def update_profile(request):
             },
             status=status.HTTP_200_OK
         )
-
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@swagger_auto_schema(
+    method='post',
+    request_body=ChangePasswordSerializer,
+    responses={200: 'Password changed successfully'}
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_password(request):
@@ -242,21 +276,17 @@ def change_password(request):
     serializer = ChangePasswordSerializer(data=request.data)
 
     if serializer.is_valid():
-        # Verify old password
         if not user.check_password(serializer.validated_data['old_password']):
             return Response(
                 {'error': 'Old password is incorrect.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-
         user.set_password(serializer.validated_data['new_password'])
         user.save()
-
         return Response(
             {'message': 'Password changed successfully. Please login again.'},
             status=status.HTTP_200_OK
         )
-
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -266,7 +296,6 @@ def verify_token(request):
     """
     Verify a JWT token is valid and return user info.
     GET /api/auth/verify/
-    Used by other services to validate tokens.
     JWT required.
     """
     user = request.user
@@ -296,12 +325,15 @@ def list_users(request):
             {'error': 'Only administrators can view all users.'},
             status=status.HTTP_403_FORBIDDEN
         )
-
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+@swagger_auto_schema(
+    method='put',
+    responses={200: 'User deactivated successfully'}
+)
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def deactivate_user(request, user_id):
