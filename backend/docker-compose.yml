@@ -37,13 +37,13 @@ services:
     ports:
       - "8545:8545"
     command: >
-      --host 0.0.0.0
+      --deterministic
       --accounts 10
-      --mnemonic "qentis blockchain development wallet seed phrase"
+      --host 0.0.0.0
+      --port 8545
       --networkId 1337
     networks:
       - qentis_network
-    restart: unless-stopped
 
   # ── SERVICES ───────────────────────────────────
   user-auth:
@@ -52,7 +52,7 @@ services:
     ports:
       - "8001:8001"
     environment:
-      - SECRET_KEY=qentis-auth-secret-key-2026
+      - SECRET_KEY=qentis-shared-secret-key-2026
       - DEBUG=True
       - DB_HOST=postgres
       - REDIS_URL=redis://redis:6379/0
@@ -76,7 +76,7 @@ services:
     ports:
       - "8002:8002"
     environment:
-      - SECRET_KEY=qentis-institution-secret-key-2026
+      - SECRET_KEY=qentis-shared-secret-key-2026
       - DEBUG=True
       - DB_HOST=postgres
       - REDIS_URL=redis://redis:6379/1
@@ -99,7 +99,7 @@ services:
     ports:
       - "8003:8003"
     environment:
-      - SECRET_KEY=qentis-item-registration-secret-key-2026
+      - SECRET_KEY=qentis-shared-secret-key-2026
       - DEBUG=True
       - DB_HOST=postgres
       - REDIS_URL=redis://redis:6379/2
@@ -126,7 +126,7 @@ services:
     ports:
       - "8004:8004"
     environment:
-      - SECRET_KEY=qentis-blockchain-secret-key-2026
+      - SECRET_KEY=qentis-shared-secret-key-2026
       - DEBUG=True
       - DB_HOST=postgres
       - ALLOWED_HOSTS=*
@@ -150,7 +150,7 @@ services:
     ports:
       - "8005:8005"
     environment:
-      - SECRET_KEY=qentis-auth-output-secret-key-2026
+      - SECRET_KEY=qentis-shared-secret-key-2026
       - DEBUG=True
       - DB_HOST=postgres
       - ALLOWED_HOSTS=*
@@ -175,7 +175,7 @@ services:
     ports:
       - "8006:8006"
     environment:
-      - SECRET_KEY=qentis-verification-secret-key-2026
+      - SECRET_KEY=qentis-shared-secret-key-2026
       - DEBUG=True
       - DB_HOST=postgres
       - REDIS_URL=redis://redis:6379/4
@@ -205,7 +205,7 @@ services:
     ports:
       - "8007:8007"
     environment:
-      - SECRET_KEY=qentis-admin-analytics-secret-key-2026
+      - SECRET_KEY=qentis-shared-secret-key-2026
       - DEBUG=True
       - DB_HOST=postgres
       - ALLOWED_HOSTS=*
