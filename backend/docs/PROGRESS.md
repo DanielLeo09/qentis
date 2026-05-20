@@ -477,3 +477,43 @@ Confirmed running together without errors:
 - All 7 Django services showing `Watching for file changes with StatReloader`
 - Ganache running with 10 funded accounts on port 8545
 - All inter-service network connections established
+
+---
+
+## Integration Testing — 20 May 2026
+**Status:** 🔄 In progress — issues found and being resolved
+
+### What we tested
+Full registration flow across services:
+User & Auth → Item Registration → Blockchain → Auth Output
+
+### Test environment
+All 7 services running simultaneously with `docker-compose up`
+All migrations applied on all services
+
+### Issue 1 — Different SECRET_KEY per service broke JWT verification
+**Symptom:** Token returned by User & Auth Service was rejected by
+Item Registration Service with `token_not_valid` error.
+**Root cause:** Each service had a different SECRET_KEY in
+docker-compose.yml. JWT tokens are signed with one key and must be
+verified with the same key across all services.
+**Fix:** Changed all 7 services to use the same shared SECRET_KEY
+`qentis-shared-secret-key-2026` in docker-compose.yml.
+**Status:** ✅ Resolved
+
+### Issue 2 — UUID vs Integer user ID mismatch
+**Symptom:** Item Registration Service throws
+`ValueError: Field 'id' expected a number but got UUID`
+when a logged-in issuer tries to register an item.
+**Root cause:** User & Auth Service uses UUID as primary key for
+users. Item Registration Service expects an integer ID when looking
+up the authenticated user from the JWT token.
+**Fix:** Mishael needs to update the User model or JWT authentication
+configuration in the Item Registration Service to handle UUID user IDs.
+**Status:** ⏳ Pending Mishael's fix
+
+### Key lesson learned
+Unit tests pass per service in isolation but integration reveals
+incompatibilities between services that unit tests cannot catch.
+This is precisely why integration testing is a separate requirement
+in the exam specification.
