@@ -517,3 +517,21 @@ Unit tests pass per service in isolation but integration reveals
 incompatibilities between services that unit tests cannot catch.
 This is precisely why integration testing is a separate requirement
 in the exam specification.
+
+### Update — 21 May 2026
+Integration tests re-run after fixes. Results: 18/20 passing.
+
+**Fixed this session:**
+- Shared SECRET_KEY across all services — JWT now accepted by all services
+- solc 0.8.0 auto-install on blockchain service startup (apps.py ready() method)
+- Blockchain container rebuilt to apply apps.py changes
+
+**Remaining failures (both pending Mishael):**
+- Hash verification fails — Ganache reset on restart, contract needs
+  redeployment. Mishael to redeploy and update CONTRACT_ADDRESS.
+- Full registration flow fails — UUID mismatch in Item Registration
+  Service. Mishael to fix User model to accept UUID primary key.
+
+**Integration test file location:**
+backend/tests/test_integration.py
+Run with: python tests/test_integration.py (all services must be up)

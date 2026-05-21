@@ -1,9 +1,8 @@
-import json
 import os
 from pathlib import Path
 
 from django.conf import settings
-from solcx import compile_source, set_solc_version
+from solcx import compile_source, install_solc, set_solc_version
 
 from .web3_client import get_web3, get_deployer_account
 
@@ -15,10 +14,19 @@ CONTRACT_PATH = Path(__file__).resolve().parent / 'QentisRegistry.sol'
 def compile_contract():
     """
     Reads the Solidity file and compiles it to bytecode + ABI.
+    Installs solc 0.8.0 if not already installed.
     bytecode — the machine code deployed to the blockchain
     ABI      — the interface that tells web3 how to call the contract functions
     """
-    set_solc_version('0.8.0')
+    try:
+        install_solc('0.8.0')
+    except Exception:
+        pass  # Already installed
+
+    try:
+        set_solc_version('0.8.0')
+    except Exception:
+        pass
 
     source = CONTRACT_PATH.read_text()
 
@@ -41,8 +49,8 @@ def deploy_contract():
     Called once when the blockchain service starts for the first time.
     Returns the deployed contract address.
     """
-    w3       = get_web3()
-    deployer = get_deployer_account(w3)
+    w3        = get_web3()
+    deployer  = get_deployer_account(w3)
     abi, bytecode = compile_contract()
 
     Contract   = w3.eth.contract(abi=abi, bytecode=bytecode)
